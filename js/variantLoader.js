@@ -24,8 +24,8 @@ async function LoadModelVariant() {
     }
 
     $.when.apply($, objectAddPromises).done(async() => {
-        let actionsPromise = getCurrentVariant().getActions();
-        actionsPromise.then((actions) => {
+        let actions = await getCurrentVariant().getActions();
+        if(actions !== undefined) {
             actions.forEach((action) => {
                 action.getObjectsSelector().setSceneRoot(editor.scene);
                 action.execute();
@@ -46,7 +46,7 @@ async function LoadModelVariant() {
                     }
                 }
             });
-        }, () => {});
+        }
     });
 }
 
