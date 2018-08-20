@@ -172,7 +172,12 @@ Editor.prototype = {
 		action.getObjectsSelector().setSceneRoot(editor.scene);
 		let object = action.getObjectsSelector().getObjects()[0];
 		let currTags = action.getTags();
-		await action.delete();
+		if(action.getVariantIDs().length == 1) {
+			await action.delete();
+		} else {
+			action.removeVariantID(getCurrentVariant().getID());
+			await action.save();
+		}
 		
 		if(currTags.autoAction !== undefined) {
 			if(currTags.autoAction == "object.position") {
