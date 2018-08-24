@@ -11,8 +11,9 @@ var Loader = function ( editor ) {
 
 	this.loadFile = function ( file, path, promise ) {
 
-		editor.scene.position_default = editor.scene.position;
-		editor.scene.position_overridden = false;
+		editor.scene.overrides = {};
+		editor.scene.overrides.position_default = editor.scene.position;
+		editor.scene.overrides.position_overridden = false;
 		var filename = file.name;
 		var extension = filename.split( '.' ).pop().toLowerCase();
 

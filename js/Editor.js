@@ -184,17 +184,17 @@ Editor.prototype = {
 		
 		if(currTags.autoAction !== undefined) {
 			if(currTags.autoAction == "object.position") {
-				object.position.copy(object.position_default);
-				object.position_overridden = false;
-				object.position_autoAction = null;
+				object.position.copy(object.overrides.position_default);
+				object.overrides.position_overridden = false;
+				object.overrides.position_autoAction = null;
 			} else if(currTags.autoAction == "object.rotation") {
-				object.rotation.copy(object.rotation_default);
-				object.rotation_overridden = false;
-				object.rotation_autoAction = null;
+				object.rotation.copy(object.overrides.rotation_default);
+				object.overrides.rotation_overridden = false;
+				object.overrides.rotation_autoAction = null;
 			} else if(currTags.autoAction == "object.scale") {
-				object.scale.copy(object.scale_default);
-				object.scale_overridden = false;
-				object.scale_autoAction = null;
+				object.scale.copy(object.overrides.scale_default);
+				object.overrides.scale_overridden = false;
+				object.overrides.scale_autoAction = null;
 			}
 			this.signals.objectChanged.dispatch(object);
 			this.signals.refreshSidebarObject3D.dispatch( object );

@@ -379,12 +379,14 @@ Sidebar.Object = function ( editor ) {
 				editor.execute( new SetPositionCommand( object, newPosition ) );
 			}
 
-			if(objectPositionOverride.dom.checked && !object.position_overridden) {
-				object.position_overridden = true;
-				editor.execute(new AddActionObjectPropertyCommand(object, "position", object.position, (action) => {object.position_autoAction = action;}));
-			} else if (!objectPositionOverride.dom.checked && object.position_overridden) {
-				object.position_overridden = false;
-				editor.execute(new RemoveActionObjectPropertyCommand(object.position_autoAction, () => {object.position_autoAction = null;}));
+			if(object.overrides) {
+				if(objectPositionOverride.dom.checked && !object.overrides.position_overridden) {
+					object.overrides.position_overridden = true;	
+					editor.execute(new AddActionObjectPropertyCommand(object, "position", object.position, (action) => {object.position_autoAction = action;}));
+				} else if (!objectPositionOverride.dom.checked && object.overrides.position_overridden) {
+					object.overrides.position_overridden = false;
+					editor.execute(new RemoveActionObjectPropertyCommand(object.position_autoAction, () => {object.position_autoAction = null;}));
+				}
 			}
 
 			var newRotation = new THREE.Euler( objectRotationX.getValue() * THREE.Math.DEG2RAD, objectRotationY.getValue() * THREE.Math.DEG2RAD, objectRotationZ.getValue() * THREE.Math.DEG2RAD );
@@ -392,12 +394,14 @@ Sidebar.Object = function ( editor ) {
 				editor.execute( new SetRotationCommand( object, newRotation ) );
 			}
 			
-			if(objectRotationOverride.dom.checked && !object.rotation_overridden) {
-				object.rotation_overridden = true;
-				editor.execute(new AddActionObjectPropertyCommand(object, "rotation", object.rotation, (action) => {object.rotation_autoAction = action;}));
-			} else if (!objectRotationOverride.dom.checked && object.rotation_overridden) {
-				object.rotation_overridden = false;
-				editor.execute(new RemoveActionObjectPropertyCommand(object.rotation_autoAction, () => {object.rotation_autoAction = null;}));
+			if(object.overrides) {
+				if(objectRotationOverride.dom.checked && !object.overrides.rotation_overridden) {
+					object.overrides.rotation_overridden = true;
+					editor.execute(new AddActionObjectPropertyCommand(object, "rotation", object.rotation, (action) => {object.rotation_autoAction = action;}));
+				} else if (!objectRotationOverride.dom.checked && object.overrides.rotation_overridden) {
+					object.overrides.rotation_overridden = false;
+					editor.execute(new RemoveActionObjectPropertyCommand(object.rotation_autoAction, () => {object.rotation_autoAction = null;}));
+				}
 			}
 
 			var newScale = new THREE.Vector3( objectScaleX.getValue(), objectScaleY.getValue(), objectScaleZ.getValue() );
@@ -405,12 +409,14 @@ Sidebar.Object = function ( editor ) {
 				editor.execute( new SetScaleCommand( object, newScale ) );
 			}
 			
-			if(objectScaleOverride.dom.checked && !object.scale_overridden) {
-				object.scale_overridden = true;
-				editor.execute(new AddActionObjectPropertyCommand(object, "scale", object.scale, (action) => {object.scale_autoAction = action;}));
-			} else if (!objectScaleOverride.dom.checked && object.scale_overridden) {
-				object.scale_overridden = false;
-				editor.execute(new RemoveActionObjectPropertyCommand(object.scale_autoAction, () => {object.scale_autoAction = null;}));
+			if(object.overrides) {
+				if(objectScaleOverride.dom.checked && !object.overrides.scale_overridden) {
+					object.overrides.scale_overridden = true;
+					editor.execute(new AddActionObjectPropertyCommand(object, "scale", object.scale, (action) => {object.scale_autoAction = action;}));
+				} else if (!objectScaleOverride.dom.checked && object.overrides.scale_overridden) {
+					object.overrides.scale_overridden = false;
+					editor.execute(new RemoveActionObjectPropertyCommand(object.scale_autoAction, () => {object.scale_autoAction = null;}));
+				}
 			}
 
 			if ( object.fov !== undefined && Math.abs( object.fov - objectFov.getValue() ) >= 0.01 ) {
@@ -627,9 +633,10 @@ Sidebar.Object = function ( editor ) {
 	});
 
 	function updateTransformControlsVisibility(object) {
-		if(	(viewport.transformControls.getMode() == "translate" && object.position_overridden) ||
-			(viewport.transformControls.getMode() == "rotate" && object.rotation_overridden) ||
-			(viewport.transformControls.getMode() == "scale" && object.scale_overridden) ) {
+		if( !object.overrides ||
+		   ((viewport.transformControls.getMode() == "translate" && object.overrides.position_overridden) ||
+			(viewport.transformControls.getMode() == "rotate" && object.overrides.rotation_overridden) ||
+			(viewport.transformControls.getMode() == "scale" && object.overrides.scale_overridden))) {
 			viewport.transformControls.attach(object);
 		} else {
 			viewport.transformControls.detach();
@@ -645,30 +652,52 @@ Sidebar.Object = function ( editor ) {
 		//objectUUID.setValue( object.uuid );
 		//objectName.setValue( object.name );
 
-		objectPositionOverride.dom.checked = object.position_overridden;
-		objectPositionX.setEnabled(object.position_overridden);
-		objectPositionY.setEnabled(object.position_overridden);
-		objectPositionZ.setEnabled(object.position_overridden);
-		objectPositionX.setValue( object.position.x );
-		objectPositionY.setValue( object.position.y );
-		objectPositionZ.setValue( object.position.z );
+		if(object.overrides) {
+			objectPositionOverride.dom.hidden = false;
+			objectPositionOverride.dom.checked = object.overrides.position_overridden;
+			objectPositionX.setEnabled(object.overrides.position_overridden);
+			objectPositionY.setEnabled(object.overrides.position_overridden);
+			objectPositionZ.setEnabled(object.overrides.position_overridden);
 
-		objectRotationOverride.dom.checked = object.rotation_overridden;
-		objectRotationX.setEnabled(object.rotation_overridden);
-		objectRotationY.setEnabled(object.rotation_overridden);
-		objectRotationZ.setEnabled(object.rotation_overridden);
+			objectRotationOverride.dom.hidden = false;
+			objectRotationOverride.dom.checked = object.overrides.rotation_overridden;
+			objectRotationX.setEnabled(object.overrides.rotation_overridden);
+			objectRotationY.setEnabled(object.overrides.rotation_overridden);
+			objectRotationZ.setEnabled(object.overrides.rotation_overridden);
+
+			objectScaleOverride.dom.hidden = false;
+			objectScaleOverride.dom.checked = object.overrides.scale_overridden;
+			objectScaleX.setEnabled(object.overrides.scale_overridden);
+			objectScaleY.setEnabled(object.overrides.scale_overridden);
+			objectScaleZ.setEnabled(object.overrides.scale_overridden);
+		} else {
+			objectPositionOverride.dom.checked = false;
+			objectPositionOverride.dom.hidden = true;
+			objectPositionX.setEnabled(true);
+			objectPositionY.setEnabled(true);
+			objectPositionZ.setEnabled(true);
+
+			objectRotationOverride.dom.checked = false;
+			objectRotationOverride.dom.hidden = true;
+			objectRotationX.setEnabled(true);
+			objectRotationY.setEnabled(true);
+			objectRotationZ.setEnabled(true);
+
+			objectScaleOverride.dom.checked = false;
+			objectScaleOverride.dom.hidden = true;
+			objectScaleX.setEnabled(true);
+			objectScaleY.setEnabled(true);
+			objectScaleZ.setEnabled(true);
+		}
 		objectRotationX.setValue( object.rotation.x * THREE.Math.RAD2DEG );
 		objectRotationY.setValue( object.rotation.y * THREE.Math.RAD2DEG );
 		objectRotationZ.setValue( object.rotation.z * THREE.Math.RAD2DEG );
-
-		objectScaleOverride.dom.checked = object.scale_overridden;
-		objectScaleX.setEnabled(object.scale_overridden);
-		objectScaleY.setEnabled(object.scale_overridden);
-		objectScaleZ.setEnabled(object.scale_overridden);
+		objectPositionX.setValue( object.position.x );
+		objectPositionY.setValue( object.position.y );
+		objectPositionZ.setValue( object.position.z );
 		objectScaleX.setValue( object.scale.x );
 		objectScaleY.setValue( object.scale.y );
 		objectScaleZ.setValue( object.scale.z );
-		objectScaleLock.setEnabled(object.scale_overridden);
 
 		if ( object.fov !== undefined ) {
 

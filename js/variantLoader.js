@@ -39,14 +39,14 @@ async function LoadModelVariant() {
                 if(action.getTags().autoAction !== undefined) {
                     object = action.getObjectsSelector().getObjects()[0];
                     if(action.getTags().autoAction == "object.position") {
-                        object.position_overridden = true;
-                        object.position_autoAction = action;
+                        object.overrides.position_overridden = true;
+                        object.overrides.position_autoAction = action;
                     } else if(action.getTags().autoAction == "object.rotation") {
-                        object.rotation_overridden = true;
-                        object.rotation_autoAction = action;
+                        object.overrides.rotation_overridden = true;
+                        object.overrides.rotation_autoAction = action;
                     } else if(action.getTags().autoAction == "object.scale") {
-                        object.scale_overridden = true;
-                        object.scale_autoAction = action;
+                        object.overrides.scale_overridden = true;
+                        object.overrides.scale_autoAction = action;
                     }
                     editor.signals.objectChanged.dispatch(object);
                     editor.signals.sceneGraphChanged.dispatch();
