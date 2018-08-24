@@ -28,6 +28,13 @@ async function LoadModelVariant() {
         if(actions !== undefined) {
             actions.forEach((action) => {
                 action.getObjectsSelector().setSceneRoot(editor.scene);
+                if(action.getTags().autoAction !== undefined) {
+                    if(action.getTags().autoAction == "addObject") {
+                        action.setOnObjectAdded(object => {
+                            editor.addHelper(object);
+                        });
+                    }
+                }
                 action.execute();
                 if(action.getTags().autoAction !== undefined) {
                     object = action.getObjectsSelector().getObjects()[0];
