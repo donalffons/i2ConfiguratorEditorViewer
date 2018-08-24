@@ -606,14 +606,16 @@ Sidebar.Object = function ( editor ) {
 
 		if ( object !== editor.selected ) return;
 
-		if(object.overrides.position_autoAction !== undefined && object.overrides.position_autoAction != null) {
-			object.overrides.position_autoAction.setValue(new i2Value(object.position));
-		}
-		if(object.overrides.rotation_autoAction !== undefined && object.overrides.rotation_autoAction != null) {
-			object.overrides.rotation_autoAction.setValue(new i2Value(object.rotation));
-		}
-		if(object.overrides.scale_autoAction !== undefined && object.overrides.scale_autoAction != null) {
-			object.overrides.scale_autoAction.setValue(new i2Value(object.scale));
+		if(object.overrides) {
+			if(object.overrides.position_autoAction !== undefined && object.overrides.position_autoAction != null) {
+				object.overrides.position_autoAction.setValue(new i2Value(object.position));
+			}
+			if(object.overrides.rotation_autoAction !== undefined && object.overrides.rotation_autoAction != null) {
+				object.overrides.rotation_autoAction.setValue(new i2Value(object.rotation));
+			}
+			if(object.overrides.scale_autoAction !== undefined && object.overrides.scale_autoAction != null) {
+				object.overrides.scale_autoAction.setValue(new i2Value(object.scale));
+			}
 		}
 
 		updateUI( object );
