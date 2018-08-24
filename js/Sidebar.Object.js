@@ -382,10 +382,10 @@ Sidebar.Object = function ( editor ) {
 			if(object.overrides) {
 				if(objectPositionOverride.dom.checked && !object.overrides.position_overridden) {
 					object.overrides.position_overridden = true;	
-					editor.execute(new AddActionObjectPropertyCommand(object, "position", object.position, (action) => {object.position_autoAction = action;}));
+					editor.execute(new AddActionObjectPropertyCommand(object, "position", object.position, (action) => {object.overrides.position_autoAction = action;}));
 				} else if (!objectPositionOverride.dom.checked && object.overrides.position_overridden) {
 					object.overrides.position_overridden = false;
-					editor.execute(new RemoveActionObjectPropertyCommand(object.position_autoAction, () => {object.position_autoAction = null;}));
+					editor.execute(new RemoveActionObjectPropertyCommand(object.overrides.position_autoAction, () => {object.overrides.position_autoAction = null;}));
 				}
 			}
 
@@ -397,10 +397,10 @@ Sidebar.Object = function ( editor ) {
 			if(object.overrides) {
 				if(objectRotationOverride.dom.checked && !object.overrides.rotation_overridden) {
 					object.overrides.rotation_overridden = true;
-					editor.execute(new AddActionObjectPropertyCommand(object, "rotation", object.rotation, (action) => {object.rotation_autoAction = action;}));
+					editor.execute(new AddActionObjectPropertyCommand(object, "rotation", object.rotation, (action) => {object.overrides.rotation_autoAction = action;}));
 				} else if (!objectRotationOverride.dom.checked && object.overrides.rotation_overridden) {
 					object.overrides.rotation_overridden = false;
-					editor.execute(new RemoveActionObjectPropertyCommand(object.rotation_autoAction, () => {object.rotation_autoAction = null;}));
+					editor.execute(new RemoveActionObjectPropertyCommand(object.overrides.rotation_autoAction, () => {object.overrides.rotation_autoAction = null;}));
 				}
 			}
 
@@ -412,10 +412,10 @@ Sidebar.Object = function ( editor ) {
 			if(object.overrides) {
 				if(objectScaleOverride.dom.checked && !object.overrides.scale_overridden) {
 					object.overrides.scale_overridden = true;
-					editor.execute(new AddActionObjectPropertyCommand(object, "scale", object.scale, (action) => {object.scale_autoAction = action;}));
+					editor.execute(new AddActionObjectPropertyCommand(object, "scale", object.scale, (action) => {object.overrides.scale_autoAction = action;}));
 				} else if (!objectScaleOverride.dom.checked && object.overrides.scale_overridden) {
 					object.overrides.scale_overridden = false;
-					editor.execute(new RemoveActionObjectPropertyCommand(object.scale_autoAction, () => {object.scale_autoAction = null;}));
+					editor.execute(new RemoveActionObjectPropertyCommand(object.overrides.scale_autoAction, () => {object.overrides.scale_autoAction = null;}));
 				}
 			}
 
@@ -606,14 +606,14 @@ Sidebar.Object = function ( editor ) {
 
 		if ( object !== editor.selected ) return;
 
-		if(object.position_autoAction !== undefined && object.position_autoAction != null) {
-			object.position_autoAction.setValue(new i2Value(object.position));
+		if(object.overrides.position_autoAction !== undefined && object.overrides.position_autoAction != null) {
+			object.overrides.position_autoAction.setValue(new i2Value(object.position));
 		}
-		if(object.rotation_autoAction !== undefined && object.rotation_autoAction != null) {
-			object.rotation_autoAction.setValue(new i2Value(object.rotation));
+		if(object.overrides.rotation_autoAction !== undefined && object.overrides.rotation_autoAction != null) {
+			object.overrides.rotation_autoAction.setValue(new i2Value(object.rotation));
 		}
-		if(object.scale_autoAction !== undefined && object.scale_autoAction != null) {
-			object.scale_autoAction.setValue(new i2Value(object.scale));
+		if(object.overrides.scale_autoAction !== undefined && object.overrides.scale_autoAction != null) {
+			object.overrides.scale_autoAction.setValue(new i2Value(object.scale));
 		}
 
 		updateUI( object );
