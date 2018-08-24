@@ -92,7 +92,6 @@ var Editor = function () {
 
 	this.selected = null;
 	this.helpers = {};
-
 };
 
 Editor.prototype = {
@@ -156,12 +155,12 @@ Editor.prototype = {
 
 	addActionObjectProperty: async function ( object, property, value ) {
 		let newAction = await i2ActionBuilder.createNewAction("i2ActionObjectProperty");
-		newAction.addVariantID(getCurrentVariant().getID());
 		newAction.setObjectsSelector(new i2ObjectsHierarchySelector(this.scene, [object]));
 		newAction.setProperty(property);
 		newAction.setValue(new i2Value(value));
 		newAction.setTags({autoAction: "object."+property})
-		await newAction.save();
+
+		getCurrentVariant().addAction(newAction);
 
 		this.signals.refreshSidebarObject3D.dispatch( object );
 
@@ -172,12 +171,8 @@ Editor.prototype = {
 		action.getObjectsSelector().setSceneRoot(editor.scene);
 		let object = action.getObjectsSelector().getObjects()[0];
 		let currTags = action.getTags();
-		if(action.getVariantIDs().length == 1) {
-			await action.delete();
-		} else {
-			action.removeVariantID(getCurrentVariant().getID());
-			await action.save();
-		}
+
+		getCurrentVariant().removeAction(action);
 		
 		if(currTags.autoAction !== undefined) {
 			if(currTags.autoAction == "object.position") {

@@ -602,15 +602,12 @@ Sidebar.Object = function ( editor ) {
 
 		if(object.position_autoAction !== undefined && object.position_autoAction != null) {
 			object.position_autoAction.setValue(new i2Value(object.position));
-			object.position_autoAction.save();
 		}
 		if(object.rotation_autoAction !== undefined && object.rotation_autoAction != null) {
 			object.rotation_autoAction.setValue(new i2Value(object.rotation));
-			object.rotation_autoAction.save();
 		}
 		if(object.scale_autoAction !== undefined && object.scale_autoAction != null) {
 			object.scale_autoAction.setValue(new i2Value(object.scale));
-			object.scale_autoAction.save();
 		}
 
 		updateUI( object );

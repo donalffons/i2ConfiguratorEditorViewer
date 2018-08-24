@@ -28,6 +28,16 @@ Menubar.File = function ( editor ) {
 	options.setClass( 'options' );
 	container.add( options );
 
+	// Save
+
+	var option = new UI.Row();
+	option.setClass( 'option' );
+	option.setTextContent( 'Save' );
+	option.onClick( function () {
+		getCurrentVariant().updateActionsOnServer();
+	} );
+	options.add( option );
+
 	// Close
 
 	var option = new UI.Row();
