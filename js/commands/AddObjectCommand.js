@@ -28,28 +28,30 @@ AddObjectCommand.prototype = {
 
 	execute: function () {
 
-		this.object.overrides = {};
-		this.object.overrides.position_default = this.object.position.clone();
-		this.object.overrides.position_overridden = false;
-		this.object.overrides.position_autoAction = undefined;
-		this.object.overrides.rotation_default = this.object.rotation.clone();
-		this.object.overrides.rotation_overridden = false;
-		this.object.overrides.rotation_autoAction = undefined;
-		this.object.overrides.scale_default = this.object.scale.clone();
-		this.object.overrides.scale_overridden = false;
-		this.object.overrides.scale_autoAction = undefined;
-		this.object.traverse(function(o){
-			o.overrides = {};
-			o.overrides.position_default = o.position.clone();
-			o.overrides.position_overridden = false;
-			o.overrides.position_autoAction = undefined;
-			o.overrides.rotation_default = o.rotation.clone();
-			o.overrides.rotation_overridden = false;
-			o.overrides.rotation_autoAction = undefined;
-			o.overrides.scale_default = o.scale.clone();
-			o.overrides.scale_overridden = false;
-			o.overrides.scale_autoAction = undefined;
-		});
+		if(!this.customObject) {
+			this.object.overrides = {};
+			this.object.overrides.position_default = this.object.position.clone();
+			this.object.overrides.position_overridden = false;
+			this.object.overrides.position_autoAction = undefined;
+			this.object.overrides.rotation_default = this.object.rotation.clone();
+			this.object.overrides.rotation_overridden = false;
+			this.object.overrides.rotation_autoAction = undefined;
+			this.object.overrides.scale_default = this.object.scale.clone();
+			this.object.overrides.scale_overridden = false;
+			this.object.overrides.scale_autoAction = undefined;
+			this.object.traverse(function(o){
+				o.overrides = {};
+				o.overrides.position_default = o.position.clone();
+				o.overrides.position_overridden = false;
+				o.overrides.position_autoAction = undefined;
+				o.overrides.rotation_default = o.rotation.clone();
+				o.overrides.rotation_overridden = false;
+				o.overrides.rotation_autoAction = undefined;
+				o.overrides.scale_default = o.scale.clone();
+				o.overrides.scale_overridden = false;
+				o.overrides.scale_autoAction = undefined;
+			});
+		}
 
 		this.editor.addObject( this.object, this.customObject );
 		this.editor.select( this.object );
