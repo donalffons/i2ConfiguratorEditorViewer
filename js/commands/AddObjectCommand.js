@@ -8,11 +8,12 @@
  * @constructor
  */
 
-var AddObjectCommand = function ( object ) {
+var AddObjectCommand = function ( object, customObject = false ) {
 
 	Command.call( this );
 
 	this.type = 'AddObjectCommand';
+	this.customObject = customObject;
 
 	this.object = object;
 	if ( object !== undefined ) {
@@ -48,7 +49,7 @@ AddObjectCommand.prototype = {
 			o.scale_autoAction = undefined;
 		});
 
-		this.editor.addObject( this.object );
+		this.editor.addObject( this.object, this.customObject );
 		this.editor.select( this.object );
 
 	},

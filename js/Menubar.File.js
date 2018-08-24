@@ -33,7 +33,22 @@ Menubar.File = function ( editor ) {
 	var option = new UI.Row();
 	option.setClass( 'option' );
 	option.setTextContent( 'Save' );
-	option.onClick( function () {
+	option.onClick( async function () {
+		let addObjectNode = editor.scene.children.find( object => { return object.name == "Custom Objects"; } );
+		if(addObjectNode != undefined) {
+			let allActions = await getCurrentVariant().getActions();
+			let addObjectAction = allActions.find(action => {
+				return action.getType() == "i2ActionAddObject" && action.getTags()["autoAction"] == "addObject";
+			});
+			if(addObjectAction == undefined) {
+				addObjectAction = await i2ActionBuilder.createNewAction("i2ActionAddObject");
+				addObjectAction.setObjectsSelector(new i2ObjectsHierarchySelector(editor.scene, [addObjectNode]));
+				addObjectAction.setTags({autoAction: "addObject"});
+				
+				getCurrentVariant().addAction(addObjectAction);
+			}
+			addObjectAction.setValue(addObjectNode.children);
+		}
 		getCurrentVariant().updateActionsOnServer();
 	} );
 	options.add( option );

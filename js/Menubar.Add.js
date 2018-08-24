@@ -47,7 +47,7 @@ Menubar.Add = function ( editor ) {
 		var mesh = new THREE.Mesh( geometry, material );
 		mesh.name = 'Plane';
 
-		editor.execute( new AddObjectCommand( mesh ) );
+		editor.execute( new AddObjectCommand( mesh, true ) );
 
 	} );
 	options.add( option );

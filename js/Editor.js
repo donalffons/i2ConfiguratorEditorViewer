@@ -92,6 +92,10 @@ var Editor = function () {
 
 	this.selected = null;
 	this.helpers = {};
+	
+	this.addObjectNode = new THREE.Group();
+	this.addObjectNode.name = "Custom Objects";
+	this.scene.add(this.addObjectNode);
 };
 
 Editor.prototype = {
@@ -133,7 +137,7 @@ Editor.prototype = {
 
 	//
 
-	addObject: function ( object ) {
+	addObject: function ( object, customObject = false ) {
 
 		var scope = this;
 
@@ -146,7 +150,11 @@ Editor.prototype = {
 
 		} );
 
-		this.scene.add( object );
+		if(!customObject) {
+			this.scene.add( object );
+		} else {
+			this.addObjectNode.add( object );
+		}
 
 		this.signals.objectAdded.dispatch( object );
 		this.signals.sceneGraphChanged.dispatch();

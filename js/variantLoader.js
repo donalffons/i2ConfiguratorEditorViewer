@@ -34,16 +34,15 @@ async function LoadModelVariant() {
                     if(action.getTags().autoAction == "object.position") {
                         object.position_overridden = true;
                         object.position_autoAction = action;
-                        editor.signals.objectChanged.dispatch(object);
                     } else if(action.getTags().autoAction == "object.rotation") {
                         object.rotation_overridden = true;
                         object.rotation_autoAction = action;
-                        editor.signals.objectChanged.dispatch(object);
                     } else if(action.getTags().autoAction == "object.scale") {
                         object.scale_overridden = true;
                         object.scale_autoAction = action;
-                        editor.signals.objectChanged.dispatch(object);
                     }
+                    editor.signals.objectChanged.dispatch(object);
+                    editor.signals.sceneGraphChanged.dispatch();
                 }
             });
         }
