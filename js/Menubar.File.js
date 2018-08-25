@@ -47,7 +47,11 @@ Menubar.File = function ( editor ) {
 				
 				getCurrentVariant().addAction(addObjectAction);
 			}
-			addObjectAction.setValue(new i2Value(addObjectNode.children));
+			if(addObjectNode.children.length > 0) {
+				addObjectAction.setValue(new i2Value(addObjectNode.children));
+			} else {
+				getCurrentVariant().removeAction(addObjectAction);
+			}
 		}
 		getCurrentVariant().updateActionsOnServer();
 	} );
