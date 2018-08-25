@@ -40,7 +40,7 @@ Menubar.File = function ( editor ) {
 			let addObjectAction = allActions.find(action => {
 				return action.getType() == "i2ActionAddObject" && action.getTags()["autoAction"] == "addObject";
 			});
-			if(addObjectAction == undefined) {
+			if(addObjectAction == undefined && addObjectNode.children.length > 0) {
 				addObjectAction = await i2ActionBuilder.createNewAction("i2ActionAddObject");
 				addObjectAction.setObjectsSelector(new i2ObjectsHierarchySelector(editor.scene, [addObjectNode]));
 				addObjectAction.setTags({autoAction: "addObject"});
@@ -49,7 +49,7 @@ Menubar.File = function ( editor ) {
 			}
 			if(addObjectNode.children.length > 0) {
 				addObjectAction.setValue(new i2Value(addObjectNode.children));
-			} else {
+			} else if(addObjectAction) {
 				getCurrentVariant().removeAction(addObjectAction);
 			}
 		}
