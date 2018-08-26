@@ -92,7 +92,7 @@ Sidebar.Material = function ( editor ) {
 	materialClassRow.add( materialClass );
 
 	container.add( materialClassRow );
-
+/*
 	// uuid
 
 	var materialUUIDRow = new UI.Row();
@@ -109,7 +109,7 @@ Sidebar.Material = function ( editor ) {
 	materialUUIDRow.add( materialUUIDRenew );
 
 	container.add( materialUUIDRow );
-
+*/
 	// name
 
 	var materialNameRow = new UI.Row();
@@ -528,11 +528,11 @@ Sidebar.Material = function ( editor ) {
 
 		if ( material ) {
 
-			if ( material.uuid !== undefined && material.uuid !== materialUUID.getValue() ) {
+			/*if ( material.uuid !== undefined && material.uuid !== materialUUID.getValue() ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'uuid', materialUUID.getValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
 			if ( material instanceof THREE[ materialClass.getValue() ] === false ) {
 
@@ -1114,12 +1114,12 @@ Sidebar.Material = function ( editor ) {
 		}
 
 		material = editor.getObjectMaterial( currentObject, currentMaterialSlot );
-
+/*
 		if ( material.uuid !== undefined ) {
 
 			materialUUID.setValue( material.uuid );
 
-		}
+		}*/
 
 		if ( material.name !== undefined ) {
 
