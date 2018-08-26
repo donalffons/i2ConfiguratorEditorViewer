@@ -701,87 +701,118 @@ Sidebar.Object = function ( editor ) {
 		objectScaleY.setValue( object.scale.y );
 		objectScaleZ.setValue( object.scale.z );
 
-		if ( object.fov !== undefined ) {
+		if(object.overrides) {
+			objectNearRow.dom.hidden = true;
+			objectFarRow.dom.hidden = true;
+			objectIntensityRow.dom.hidden = true;
+			objectColorRow.dom.hidden = true;
+			objectGroundColorRow.dom.hidden = true;
+			objectDistanceRow.dom.hidden = true;
+			objectAngleRow.dom.hidden = true;
+			objectPenumbraRow.dom.hidden = true;
+			objectDecayRow.dom.hidden = true;
+			objectShadowRow.dom.hidden = true;
+			objectVisibleRow.dom.hidden = true;
+			objectFrustumCulledRow.dom.hidden = true;
+			objectRenderOrderRow.dom.hidden = true;
+		} else {
+			objectFovRow.dom.hidden = false;
+			objectNearRow.dom.hidden = false;
+			objectFarRow.dom.hidden = false;
+			objectIntensityRow.dom.hidden = false;
+			objectColorRow.dom.hidden = false;
+			objectGroundColorRow.dom.hidden = false;
+			objectDistanceRow.dom.hidden = false;
+			objectAngleRow.dom.hidden = false;
+			objectPenumbraRow.dom.hidden = false;
+			objectDecayRow.dom.hidden = false;
+			objectShadowRow.dom.hidden = false;
+			objectVisibleRow.dom.hidden = false;
+			objectFrustumCulledRow.dom.hidden = false;
+			objectRenderOrderRow.dom.hidden = false;
 
-			objectFov.setValue( object.fov );
+			if ( object.fov !== undefined ) {
 
+				objectFov.setValue( object.fov );
+
+			}
+
+			if ( object.near !== undefined ) {
+
+				objectNear.setValue( object.near );
+
+			}
+
+			if ( object.far !== undefined ) {
+
+				objectFar.setValue( object.far );
+
+			}
+
+			if ( object.intensity !== undefined ) {
+
+				objectIntensity.setValue( object.intensity );
+
+			}
+
+			if ( object.color !== undefined ) {
+
+				objectColor.setHexValue( object.color.getHexString() );
+
+			}
+
+			if ( object.groundColor !== undefined ) {
+
+				objectGroundColor.setHexValue( object.groundColor.getHexString() );
+
+			}
+
+			if ( object.distance !== undefined ) {
+
+				objectDistance.setValue( object.distance );
+
+			}
+
+			if ( object.angle !== undefined ) {
+
+				objectAngle.setValue( object.angle );
+
+			}
+
+			if ( object.penumbra !== undefined ) {
+
+				objectPenumbra.setValue( object.penumbra );
+
+			}
+
+			if ( object.decay !== undefined ) {
+
+				objectDecay.setValue( object.decay );
+
+			}
+
+			if ( object.castShadow !== undefined ) {
+
+				objectCastShadow.setValue( object.castShadow );
+
+			}
+
+			if ( object.receiveShadow !== undefined ) {
+
+				objectReceiveShadow.setValue( object.receiveShadow );
+
+			}
+
+			if ( object.shadow !== undefined ) {
+
+				objectShadowRadius.setValue( object.shadow.radius );
+
+			}
+
+			objectVisible.setValue( object.visible );
+			objectFrustumCulled.setValue( object.frustumCulled );
+			objectRenderOrder.setValue( object.renderOrder );
 		}
-
-		if ( object.near !== undefined ) {
-
-			objectNear.setValue( object.near );
-
-		}
-
-		if ( object.far !== undefined ) {
-
-			objectFar.setValue( object.far );
-
-		}
-
-		if ( object.intensity !== undefined ) {
-
-			objectIntensity.setValue( object.intensity );
-
-		}
-
-		if ( object.color !== undefined ) {
-
-			objectColor.setHexValue( object.color.getHexString() );
-
-		}
-
-		if ( object.groundColor !== undefined ) {
-
-			objectGroundColor.setHexValue( object.groundColor.getHexString() );
-
-		}
-
-		if ( object.distance !== undefined ) {
-
-			objectDistance.setValue( object.distance );
-
-		}
-
-		if ( object.angle !== undefined ) {
-
-			objectAngle.setValue( object.angle );
-
-		}
-
-		if ( object.penumbra !== undefined ) {
-
-			objectPenumbra.setValue( object.penumbra );
-
-		}
-
-		if ( object.decay !== undefined ) {
-
-			objectDecay.setValue( object.decay );
-
-		}
-
-		if ( object.castShadow !== undefined ) {
-
-			objectCastShadow.setValue( object.castShadow );
-
-		}
-
-		if ( object.receiveShadow !== undefined ) {
-
-			objectReceiveShadow.setValue( object.receiveShadow );
-
-		}
-
-		if ( object.shadow !== undefined ) {
-
-			objectShadowRadius.setValue( object.shadow.radius );
-
-		}
-
-		objectVisible.setValue( object.visible );
-		objectFrustumCulled.setValue( object.frustumCulled );
-		objectRenderOrder.setValue( object.renderOrder );
 
 		/*try {
 
