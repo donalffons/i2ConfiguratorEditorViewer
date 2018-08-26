@@ -74,17 +74,17 @@ Sidebar.Material = function ( editor ) {
 	var materialClassRow = new UI.Row();
 	var materialClass = new UI.Select().setOptions( {
 
-		'LineBasicMaterial': 'LineBasicMaterial',
+		/*'LineBasicMaterial': 'LineBasicMaterial',
 		'LineDashedMaterial': 'LineDashedMaterial',
 		'MeshBasicMaterial': 'MeshBasicMaterial',
 		'MeshDepthMaterial': 'MeshDepthMaterial',
-		'MeshNormalMaterial': 'MeshNormalMaterial',
+		'MeshNormalMaterial': 'MeshNormalMaterial',*/
 		'MeshLambertMaterial': 'MeshLambertMaterial',
 		'MeshPhongMaterial': 'MeshPhongMaterial',
 		'MeshStandardMaterial': 'MeshStandardMaterial',
-		'MeshPhysicalMaterial': 'MeshPhysicalMaterial',
+		'MeshPhysicalMaterial': 'MeshPhysicalMaterial'/*,
 		'ShaderMaterial': 'ShaderMaterial',
-		'SpriteMaterial': 'SpriteMaterial'
+		'SpriteMaterial': 'SpriteMaterial'*/
 
 	} ).setWidth( '150px' ).setFontSize( '12px' ).onChange( update );
 
