@@ -444,6 +444,7 @@ UI.Checkbox = function ( boolean ) {
 
 	this.dom = dom;
 	this.setValue( boolean );
+	this.setEnabled( true );
 
 	return this;
 
@@ -585,7 +586,7 @@ UI.Number = function ( number ) {
 	this.dom = dom;
 
 	this.setValue( number );
-	this.setEnabled( false );
+	this.setEnabled( true );
 
 	var changeEvent = document.createEvent( 'HTMLEvents' );
 	changeEvent.initEvent( 'change', true, true );
@@ -1005,9 +1006,9 @@ UI.Modal = function ( value ) {
 	dom.style.alignItems = 'center';
 	dom.style.justifyContent = 'center';
 	dom.addEventListener( 'click', function ( event ) {
-		if(event.target == this) {
-			scope.hide();
-		}
+
+		scope.hide();
+
 	} );
 
 	this.dom = dom;
