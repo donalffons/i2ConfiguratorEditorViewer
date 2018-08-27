@@ -614,6 +614,7 @@ Sidebar.Material = function ( editor ) {
 				/* MeshLambertMaterial MeshPhongMaterial MeshStandardMaterial MeshPhysicalMaterial*/
 				let m = materialClass.getValue();
 
+				material.name = prevMaterial.name;
 				material.color = prevMaterial.color;
 				if(m == "MeshStandardMaterial" || m == "MeshPhysicalMaterial") {
 					material.roughness = prevMaterial.roughness ? prevMaterial.roughness : 1;
