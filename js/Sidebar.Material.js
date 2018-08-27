@@ -125,7 +125,7 @@ Sidebar.Material = function ( editor ) {
 	container.add( materialNameRow );
 
 	// program
-
+/*
 	var materialProgramRow = new UI.Row();
 	materialProgramRow.add( new UI.Text( 'Program' ).setWidth( '90px' ) );
 
@@ -157,7 +157,7 @@ Sidebar.Material = function ( editor ) {
 	materialProgramRow.add( materialProgramFragment );
 
 	container.add( materialProgramRow );
-
+*/
 	// color
 
 	var materialColorRow = new UI.Row();
