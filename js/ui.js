@@ -369,6 +369,7 @@ UI.Select = function () {
 	dom.style.padding = '2px';
 
 	this.dom = dom;
+	this.setEnabled(true);
 
 	return this;
 
@@ -428,6 +429,27 @@ UI.Select.prototype.setValue = function ( value ) {
 
 	return this;
 
+};
+
+UI.Select.prototype.setEnabled = function( enabled ) {
+	if(enabled === undefined || enabled == null) {
+		enabled = false;
+	}
+	this.dom.disabled = !enabled;
+	this.dom.classList.remove("ui-enabled")
+	this.dom.classList.remove("ui-disabled")
+	var classname;
+	if(enabled) {
+		classname = "ui-enabled";
+	} else {
+		classname = "ui-disabled";
+	}
+	this.dom.classList.add(classname);
+	return this;
+};
+
+UI.Select.prototype.getEnabled = function( ) {
+	return !this.dom.disabled;
 };
 
 // Checkbox
@@ -517,6 +539,7 @@ UI.Color = function () {
 	} catch ( exception ) {}
 
 	this.dom = dom;
+	this.setEnabled(true);
 
 	return this;
 
@@ -551,6 +574,27 @@ UI.Color.prototype.setHexValue = function ( hex ) {
 
 	return this;
 
+};
+
+UI.Color.prototype.setEnabled = function( enabled ) {
+	if(enabled === undefined || enabled == null) {
+		enabled = false;
+	}
+	this.dom.disabled = !enabled;
+	this.dom.classList.remove("ui-enabled")
+	this.dom.classList.remove("ui-disabled")
+	var classname;
+	if(enabled) {
+		classname = "ui-enabled";
+	} else {
+		classname = "ui-disabled";
+	}
+	this.dom.classList.add(classname);
+	return this;
+};
+
+UI.Checkbox.prototype.getEnabled = function( ) {
+	return !this.dom.disabled;
 };
 
 
