@@ -1042,7 +1042,7 @@ Sidebar.Material = function ( editor ) {
 			'shininess': materialShininessRow,
 			'clearCoat': materialClearCoatRow,
 			'clearCoatRoughness': materialClearCoatRoughnessRow,
-			'vertexShader': materialProgramRow,
+			/*'vertexShader': materialProgramRow,*/
 			'vertexColors': materialVertexColorsRow,
 			'skinning': materialSkinningRow,
 			'map': materialMapRow,
