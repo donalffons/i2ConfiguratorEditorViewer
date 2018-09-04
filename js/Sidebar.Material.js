@@ -606,74 +606,22 @@ Sidebar.Material = function ( editor ) {
 
 			}*/
 
-			if ( material instanceof THREE[ materialClass.getValue() ] === false ) {
+			if ( material.overrides ) {
+				if(materialClassOverride.dom.checked && !material.overrides.materialType_overridden) {
+					material.overrides.materialType_overridden = true;
+					editor.execute(new AddActionMaterialTypeCommand(material, materialClass.getValue(), (action) => {material.overrides.materialType_autoAction = action;}));
+				} else if (!materialClassOverride.dom.checked && material.overrides.materialType_overridden) {
+					material.overrides.materialType_overridden = false;
+					editor.execute(new RemoveActionMaterialTypeCommand(material.overrides.materialType_autoAction, () => {material.overrides.materialType_autoAction = null;}));
+				}
 
-				let prevMaterial = material;
+				if(material.overrides.materialType_autoAction) {
+					material.overrides.materialType_autoAction.getValue().setValueData(materialClass.getValue());
+					material.overrides.materialType_autoAction.execute();
+				}
+			} else if ( material instanceof THREE[ materialClass.getValue() ] === false ) {
+
 				material = new THREE[ materialClass.getValue() ]();
-
-				/* MeshLambertMaterial MeshPhongMaterial MeshStandardMaterial MeshPhysicalMaterial*/
-				let m = materialClass.getValue();
-
-				material.name = prevMaterial.name;
-				material.color = prevMaterial.color;
-				if(m == "MeshStandardMaterial" || m == "MeshPhysicalMaterial") {
-					material.roughness = prevMaterial.roughness ? prevMaterial.roughness : 1;
-					material.metalness = prevMaterial.metalness ? prevMaterial.metalness : 0;
-				} else {
-					delete material.roughness;
-					delete material.metalness;
-				}
-				material.emissive = prevMaterial.emissive;
-				if(m == "MeshPhysicalMaterial") {
-					material.clearCoat = prevMaterial.clearCoat ? prevMaterial.clearCoat : 0;
-					material.clearCoatRoughness = prevMaterial.clearCoatRoughness ? prevMaterial.clearCoatRoughness : 0;
-				} else {
-					delete material.clearCoat;
-					delete material.clearCoatRoughness;
-				}
-				if(m == "MeshPhongMaterial") {
-					material.specular = prevMaterial.specular ? prevMaterial.specular : new THREE.Color(0, 0, 0);
-					material.shininess = prevMaterial.shininess ? prevMaterial.shininess : 30;
-				} else {
-					delete material.specular;
-					delete material.shininess;
-				}
-				material.vertexColors = prevMaterial.vertexColors;
-				material.skinning = prevMaterial.skinning;
-				material.map = prevMaterial.map;
-				material.alphaMap = prevMaterial.alphaMap;
-				if(m == "MeshPhongMaterial" || m == "MeshStandardMaterial" || m == "MeshPhysicalMaterial") {
-					material.bumpMap = prevMaterial.bumpMap ? prevMaterial.bumpMap : null;
-					material.normalMap = prevMaterial.normalMap ? prevMaterial.normalMap : null;
-					material.displacementMap = prevMaterial.displacementMap ? prevMaterial.displacementMap : null;
-				} else {
-					delete material.bumpMap;
-					delete material.normalMap;
-					delete material.displacementMap;
-				}
-				if(m == "MeshStandardMaterial" || m == "MeshPhysicalMaterial") {
-					material.roughnessMap = prevMaterial.roughnessMap ? prevMaterial.roughnessMap : null;
-					material.metalnessMap = prevMaterial.metalnessMap ? prevMaterial.metalnessMap : null;
-				} else {
-					delete material.roughnessMap;
-					delete material.metalnessMap;
-				}
-				if(m == "MeshLambertMaterial" || m == "MeshPhongMaterial") {
-					material.specularMap = prevMaterial.specularMap ? prevMaterial.specularMap : null;
-				} else {
-					delete material.specularMap;
-				}
-				material.envMap = prevMaterial.envMap;
-				material.lightMap = prevMaterial.lightMap;
-				material.aoMap = prevMaterial.aoMap;
-				material.emissiveMap = prevMaterial.emissiveMap;
-				material.side = prevMaterial.side;
-				material.flatShading = prevMaterial.flatShading;
-				material.blending = prevMaterial.blending;
-				material.opacity = prevMaterial.opacity;
-				material.transparent = prevMaterial.transparent;
-				material.alphaTest = prevMaterial.alphaTest;
-				material.wireframe = prevMaterial.wireframe;
 
 				editor.execute( new SetMaterialCommand( currentObject, material, currentMaterialSlot ), 'New Material: ' + materialClass.getValue() );
 				// TODO Copy other references in the scene graph
@@ -1169,6 +1117,16 @@ Sidebar.Material = function ( editor ) {
 		if ( ! currentObject ) return;
 
 		var material = currentObject.material;
+		
+		if(material.overrides) {
+			materialClassOverride.dom.hidden = false;
+			materialClassOverride.dom.checked = material.overrides.materialType_overridden;
+			materialClass.setEnabled(material.overrides.materialType_overridden);
+		} else {
+			materialClassOverride.dom.hidden = true;
+			materialClassOverride.dom.checked = false;
+			materialClass.setEnabled(true);
+		}
 
 		if ( Array.isArray( material ) ) {
 

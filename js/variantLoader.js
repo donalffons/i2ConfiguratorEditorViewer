@@ -27,7 +27,12 @@ async function LoadModelVariant() {
         let actions = await getCurrentVariant().getActions();
         if(actions !== undefined) {
             actions.forEach((action) => {
-                action.getObjectsSelector().setSceneRoot(editor.scene);
+                if(action.getType() == "i2ActionObjectProperty" || action.getType() == "i2ActionAddObject") {
+                    action.getObjectsSelector().setSceneRoot(editor.scene);
+                } else if (action.getType() == "i2ActionMaterialType") {
+                    action.getMaterialSelector().setMaterialCollection(editor.materials);
+                    action.setSceneRoot(editor.scene);
+                }
                 if(action.getTags().autoAction !== undefined) {
                     if(action.getTags().autoAction == "addObject") {
                         action.setOnObjectAdded(object => {
@@ -36,7 +41,9 @@ async function LoadModelVariant() {
                     }
                 }
                 action.execute();
-                if(action.getTags().autoAction !== undefined) {
+                if( action.getTags().autoAction == "object.position" ||
+                    action.getTags().autoAction == "object.rotation" ||
+                    action.getTags().autoAction == "object.scale" ) {
                     object = action.getObjectsSelector().getObjects()[0];
                     if(action.getTags().autoAction == "object.position") {
                         object.overrides.position_overridden = true;
@@ -49,8 +56,12 @@ async function LoadModelVariant() {
                         object.overrides.scale_autoAction = action;
                     }
                     editor.signals.objectChanged.dispatch(object);
-                    editor.signals.sceneGraphChanged.dispatch();
+                } else if (action.getTags().autoAction == "materialType") {
+                    let material = action.getMaterialSelector().getMaterial();
+					material.overrides.materialType_overridden = true;
+                    material.overrides.materialType_autoAction = action;
                 }
+                editor.signals.sceneGraphChanged.dispatch();
             });
         }
     });

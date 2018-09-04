@@ -144,7 +144,7 @@ Editor.prototype = {
 		object.traverse( function ( child ) {
 
 			if ( child.geometry !== undefined ) scope.addGeometry( child.geometry );
-			if ( child.material !== undefined ) scope.addMaterial( child.material );
+			if ( child.material !== undefined ) scope.addMaterial( child.material, !customObject );
 
 			scope.addHelper( child );
 
@@ -198,6 +198,37 @@ Editor.prototype = {
 			}
 			this.signals.objectChanged.dispatch(object);
 			this.signals.refreshSidebarObject3D.dispatch( object );
+		}
+	},
+
+	addActionMaterialType: async function(material, materialType) {
+		let newAction = await i2ActionBuilder.createNewAction("i2ActionMaterialType");
+		newAction.setSceneRoot(this.scene);
+		newAction.setMaterialSelector(new i2MaterialNameSelector(this.materials, this.scene, material));
+		newAction.setValue(new i2Value(materialType));
+		newAction.setTags({autoAction: "materialType"})
+
+		getCurrentVariant().addAction(newAction);
+		newAction.execute();
+
+		this.signals.sceneGraphChanged.dispatch();
+
+		return newAction;
+	},
+
+	removeActionMaterialType: async function(action) {
+		action.getMaterialSelector().setMaterialCollection(this.materials);
+		let material = action.getMaterialSelector().getMaterial();
+		let currTags = action.getTags();
+		getCurrentVariant().removeAction(action);
+		
+		if(currTags.autoAction !== undefined) {
+			if(currTags.autoAction == "materialType") {
+				action.revert(material.overrides.materialType_default);
+				material.overrides.materialType_overridden = false;
+				material.overrides.materialType_autoAction = null;
+			}
+			this.signals.sceneGraphChanged.dispatch();
 		}
 	},
 
@@ -264,9 +295,14 @@ Editor.prototype = {
 
 	},
 
-	addMaterial: function ( material ) {
+	addMaterial: function ( material, overridable=true ) {
 
 		this.materials[ material.uuid ] = material;
+		if(overridable) {
+			material.overrides = {};
+			material.overrides.materialType_default = material.constructor.name;
+			material.overrides.materialType_overridden = false
+		}
 
 	},
 
