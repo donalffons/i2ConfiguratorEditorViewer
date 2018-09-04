@@ -14,6 +14,10 @@ var Loader = function ( editor ) {
 		editor.scene.overrides = {};
 		editor.scene.overrides.position_default = editor.scene.position;
 		editor.scene.overrides.position_overridden = false;
+		editor.scene.overrides.rotation_default = editor.scene.rotation;
+		editor.scene.overrides.rotation_overridden = false;
+		editor.scene.overrides.scale_default = editor.scene.scale;
+		editor.scene.overrides.scale_overridden = false;
 		var filename = file.name;
 		var extension = filename.split( '.' ).pop().toLowerCase();
 
