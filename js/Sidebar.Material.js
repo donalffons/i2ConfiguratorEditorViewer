@@ -67,6 +67,7 @@ Sidebar.Material = function ( editor ) {
 	} ) );
 
 	container.add( managerRow );
+	managerRow.dom.hidden = true;
 
 
 	// type
@@ -127,6 +128,7 @@ Sidebar.Material = function ( editor ) {
 	materialNameRow.add( materialName );
 
 	container.add( materialNameRow );
+	materialNameRow.dom.hidden = true;
 
 	// program
 /*
@@ -173,6 +175,7 @@ Sidebar.Material = function ( editor ) {
 	materialColorRow.add( materialColor );
 
 	container.add( materialColorRow );
+	materialColorRow.dom.hidden = true;
 
 	// roughness
 
@@ -185,6 +188,7 @@ Sidebar.Material = function ( editor ) {
 	materialRoughnessRow.add( materialRoughness );
 
 	container.add( materialRoughnessRow );
+	materialRoughnessRow.dom.hidden = true;
 
 	// metalness
 
@@ -197,6 +201,7 @@ Sidebar.Material = function ( editor ) {
 	materialMetalnessRow.add( materialMetalness );
 
 	container.add( materialMetalnessRow );
+	materialMetalnessRow.dom.hidden = true;
 
 	// emissive
 
@@ -209,6 +214,7 @@ Sidebar.Material = function ( editor ) {
 	materialEmissiveRow.add( materialEmissive );
 
 	container.add( materialEmissiveRow );
+	materialEmissiveRow.dom.hidden = true;
 
 	// specular
 
@@ -221,6 +227,7 @@ Sidebar.Material = function ( editor ) {
 	materialSpecularRow.add( materialSpecular );
 
 	container.add( materialSpecularRow );
+	materialSpecularRow.dom.hidden = true;
 
 	// shininess
 
@@ -233,6 +240,7 @@ Sidebar.Material = function ( editor ) {
 	materialShininessRow.add( materialShininess );
 
 	container.add( materialShininessRow );
+	materialShininessRow.dom.hidden = true;
 
 	// clearCoat
 
@@ -245,6 +253,7 @@ Sidebar.Material = function ( editor ) {
 	materialClearCoatRow.add( materialClearCoat );
 
 	container.add( materialClearCoatRow );
+	materialClearCoatRow.dom.hidden = true;
 
 	// clearCoatRoughness
 
@@ -257,6 +266,7 @@ Sidebar.Material = function ( editor ) {
 	materialClearCoatRoughnessRow.add( materialClearCoatRoughness );
 
 	container.add( materialClearCoatRoughnessRow );
+	materialClearCoatRoughnessRow.dom.hidden = true;
 
 	// vertex colors
 
@@ -275,6 +285,7 @@ Sidebar.Material = function ( editor ) {
 	materialVertexColorsRow.add( materialVertexColors );
 
 	container.add( materialVertexColorsRow );
+	materialVertexColorsRow.dom.hidden = true;
 
 	// skinning
 
@@ -287,6 +298,7 @@ Sidebar.Material = function ( editor ) {
 	materialSkinningRow.add( materialSkinning );
 
 	container.add( materialSkinningRow );
+	materialSkinningRow.dom.hidden = true;
 
 	// map
 
@@ -301,6 +313,7 @@ Sidebar.Material = function ( editor ) {
 	materialMapRow.add( materialMap );
 
 	container.add( materialMapRow );
+	materialMapRow.dom.hidden = true;
 
 	// alpha map
 
@@ -315,6 +328,7 @@ Sidebar.Material = function ( editor ) {
 	materialAlphaMapRow.add( materialAlphaMap );
 
 	container.add( materialAlphaMapRow );
+	materialAlphaMapRow.dom.hidden = true;
 
 	// bump map
 
@@ -333,6 +347,7 @@ Sidebar.Material = function ( editor ) {
 	materialBumpMapRow.add( materialBumpScale );
 
 	container.add( materialBumpMapRow );
+	materialBumpMapRow.dom.hidden = true;
 
 	// normal map
 
@@ -347,6 +362,7 @@ Sidebar.Material = function ( editor ) {
 	materialNormalMapRow.add( materialNormalMap );
 
 	container.add( materialNormalMapRow );
+	materialNormalMapRow.dom.hidden = true;
 
 	// displacement map
 
@@ -365,6 +381,7 @@ Sidebar.Material = function ( editor ) {
 	materialDisplacementMapRow.add( materialDisplacementScale );
 
 	container.add( materialDisplacementMapRow );
+	materialDisplacementMapRow.dom.hidden = true;
 
 	// roughness map
 
@@ -379,6 +396,7 @@ Sidebar.Material = function ( editor ) {
 	materialRoughnessMapRow.add( materialRoughnessMap );
 
 	container.add( materialRoughnessMapRow );
+	materialRoughnessMapRow.dom.hidden = true;
 
 	// metalness map
 
@@ -393,6 +411,7 @@ Sidebar.Material = function ( editor ) {
 	materialMetalnessMapRow.add( materialMetalnessMap );
 
 	container.add( materialMetalnessMapRow );
+	materialMetalnessMapRow.dom.hidden = true;
 
 	// specular map
 
@@ -407,6 +426,7 @@ Sidebar.Material = function ( editor ) {
 	materialSpecularMapRow.add( materialSpecularMap );
 
 	container.add( materialSpecularMapRow );
+	materialSpecularMapRow.dom.hidden = true;
 
 	// env map
 
@@ -425,6 +445,7 @@ Sidebar.Material = function ( editor ) {
 	materialEnvMapRow.add( materialReflectivity );
 
 	container.add( materialEnvMapRow );
+	materialEnvMapRow.dom.hidden = true;
 
 	// light map
 
@@ -439,6 +460,7 @@ Sidebar.Material = function ( editor ) {
 	materialLightMapRow.add( materialLightMap );
 
 	container.add( materialLightMapRow );
+	materialLightMapRow.dom.hidden = true;
 
 	// ambient occlusion map
 
@@ -457,6 +479,7 @@ Sidebar.Material = function ( editor ) {
 	materialAOMapRow.add( materialAOScale );
 
 	container.add( materialAOMapRow );
+	materialAOMapRow.dom.hidden = true;
 
 	// emissive map
 
@@ -471,6 +494,7 @@ Sidebar.Material = function ( editor ) {
 	materialEmissiveMapRow.add( materialEmissiveMap );
 
 	container.add( materialEmissiveMapRow );
+	materialEmissiveMapRow.dom.hidden = true;
 
 	// side
 
@@ -489,6 +513,7 @@ Sidebar.Material = function ( editor ) {
 	materialSideRow.add( materialSide );
 
 	container.add( materialSideRow );
+	materialSideRow.dom.hidden = true;
 
 	// shading
 
@@ -501,6 +526,7 @@ Sidebar.Material = function ( editor ) {
 	materialShadingRow.add( materialShading );
 
 	container.add( materialShadingRow );
+	materialShadingRow.dom.hidden = true;
 
 	// blending
 
@@ -522,6 +548,7 @@ Sidebar.Material = function ( editor ) {
 	materialBlendingRow.add( materialBlending );
 
 	container.add( materialBlendingRow );
+	materialBlendingRow.dom.hidden = true;
 
 	// opacity
 
@@ -534,6 +561,7 @@ Sidebar.Material = function ( editor ) {
 	materialOpacityRow.add( materialOpacity );
 
 	container.add( materialOpacityRow );
+	materialOpacityRow.dom.hidden = true;
 
 	// transparent
 
@@ -546,6 +574,7 @@ Sidebar.Material = function ( editor ) {
 	materialTransparentRow.add( materialTransparent );
 
 	container.add( materialTransparentRow );
+	materialTransparentRow.dom.hidden = true;
 
 	// alpha test
 
@@ -558,6 +587,7 @@ Sidebar.Material = function ( editor ) {
 	materialAlphaTestRow.add( materialAlphaTest );
 
 	container.add( materialAlphaTestRow );
+	materialAlphaTestRow.dom.hidden = true;
 
 	// wireframe
 
@@ -574,6 +604,7 @@ Sidebar.Material = function ( editor ) {
 	materialWireframeRow.add( materialWireframeLinewidth );
 
 	container.add( materialWireframeRow );
+	materialWireframeRow.dom.hidden = true;
 
 	//
 
