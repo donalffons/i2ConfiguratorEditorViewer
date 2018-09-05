@@ -116,11 +116,7 @@ Sidebar.Material = function ( editor ) {
 	// name
 
 	var materialNameRow = new UI.Row();
-	var materialName = new UI.Input().setWidth( '150px' ).setFontSize( '12px' ).onChange( function () {
-
-		editor.execute( new SetMaterialValueCommand( editor.selected, 'name', materialName.getValue(), currentMaterialSlot ) );
-
-	} );
+	var materialName = new UI.Input().setWidth( '150px' ).setFontSize( '12px' ).onChange(function(){update();});
 
 	materialNameRow.add( new UI.Text( 'Name' ).setWidth( '90px' ) );
 	var materialNameOverride = new UI.Checkbox().onChange( function(){update();});
@@ -661,6 +657,12 @@ Sidebar.Material = function ( editor ) {
 				// copy for the current object explicitly and to
 				// attach the current material to other objects.
 
+			}
+
+			if ( material.name !== undefined ) {
+
+				editor.execute( new SetMaterialValueCommand( currentObject, 'name', materialName.getValue(), currentMaterialSlot ) );
+				
 			}
 
 			if ( material.color !== undefined && material.color.getHex() !== materialColor.getHexValue() ) {
