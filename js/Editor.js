@@ -299,7 +299,9 @@ Editor.prototype = {
 
 		this.materials[ material.uuid ] = material;
 		if(overridable) {
-			material.overrides = {};
+			if(!material.overrides) {
+				material.overrides = {};
+			}
 			material.overrides.materialType_default = material.constructor.name;
 			material.overrides.materialType_overridden = false
 		}
