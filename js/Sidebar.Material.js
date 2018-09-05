@@ -119,12 +119,10 @@ Sidebar.Material = function ( editor ) {
 	var materialName = new UI.Input().setWidth( '150px' ).setFontSize( '12px' ).onChange(function(){update();});
 
 	materialNameRow.add( new UI.Text( 'Name' ).setWidth( '90px' ) );
-	var materialNameOverride = new UI.Checkbox().onChange( function(){update();});
-	materialNameRow.add( materialNameOverride );
 	materialNameRow.add( materialName );
 
 	container.add( materialNameRow );
-	materialNameRow.dom.hidden = true;
+	materialName.setEnabled(false);
 
 	// program
 /*
