@@ -169,7 +169,6 @@ Sidebar.Material = function ( editor ) {
 	materialColorRow.add( materialColor );
 
 	container.add( materialColorRow );
-	materialColorRow.dom.hidden = true;
 
 	// roughness
 
@@ -640,9 +639,21 @@ Sidebar.Material = function ( editor ) {
 					editor.execute(new RemoveActionMaterialTypeCommand(material.overrides.materialType_autoAction, () => {material.overrides.materialType_autoAction = null;}));
 				}
 
+				if(materialColorOverride.dom.checked && !material.overrides.materialColor_overridden) {
+					material.overrides.materialColor_overridden = true;
+					editor.execute(new AddActionMaterialPropertyCommand(material, "color", materialColor.getValue(), (action) => {material.overrides.materialColor_autoAction = action;}));
+				} else if (!materialColorOverride.dom.checked && material.overrides.materialColor_overridden) {
+					material.overrides.materialColor_overridden = false;
+					editor.execute(new RemoveActionMaterialPropertyCommand(material.overrides.materialColor_autoAction, () => {material.overrides.materialColor_autoAction = null;}));
+				}
+
 				if(material.overrides.materialType_autoAction) {
 					material.overrides.materialType_autoAction.getValue().setValueData(materialClass.getValue());
 					material.overrides.materialType_autoAction.execute();
+				}
+				if(material.overrides.materialColor_autoAction) {
+					material.overrides.materialColor_autoAction.getValue().setValueData(materialColor.getValue());
+					material.overrides.materialColor_autoAction.execute();
 				}
 			} else if ( material instanceof THREE[ materialClass.getValue() ] === false ) {
 
@@ -1153,10 +1164,18 @@ Sidebar.Material = function ( editor ) {
 			materialClassOverride.dom.hidden = false;
 			materialClassOverride.dom.checked = material.overrides.materialType_overridden;
 			materialClass.setEnabled(material.overrides.materialType_overridden);
+
+			materialColorOverride.dom.hidden = false;
+			materialColorOverride.dom.checked = material.overrides.materialColor_overridden;
+			materialColor.setEnabled(material.overrides.materialColor_overridden);
 		} else {
 			materialClassOverride.dom.hidden = true;
 			materialClassOverride.dom.checked = false;
 			materialClass.setEnabled(true);
+
+			materialColorOverride.dom.hidden = true;
+			materialColorOverride.dom.checked = false;
+			materialColor.setEnabled(true);
 		}
 
 		if ( Array.isArray( material ) ) {

@@ -201,9 +201,47 @@ Editor.prototype = {
 		}
 	},
 
+	addActionMaterialProperty: async function ( material, property, value ) {
+		let newAction = await i2ActionBuilder.createNewAction("i2ActionMaterialProperty");
+		newAction.setMaterialSelector(new i2MaterialNameSelector(this.materials, material));
+		newAction.setProperty(property);
+		newAction.setValue(new i2Value(value));
+		newAction.setTags({autoAction: "material."+property})
+
+		if(!material.overrides) {
+			material.overrides = {};
+		}
+		if(property == "color") { // HACK!
+			material.overrides.materialColor_default = material.color.clone();
+		}
+		getCurrentVariant().addAction(newAction);
+		newAction.execute();
+
+		this.signals.refreshSidebarObject3D.dispatch( editor.selected );
+
+		return newAction;
+	},
+
+	removeActionMaterialProperty: async function ( action ) {
+		let material = action.getMaterialSelector().getMaterial();
+		let currTags = action.getTags();
+
+		getCurrentVariant().removeAction(action);
+		
+		if(currTags.autoAction !== undefined) {
+			if(currTags.autoAction == "material.color") {
+				material.color.copy(material.overrides.materialColor_default);
+				material.overrides.materialColor_overridden = false;
+				material.overrides.materialColor_autoAction = null;
+			}
+			this.signals.objectChanged.dispatch(editor.selected);
+			this.signals.refreshSidebarObject3D.dispatch( editor.selected );
+		}
+	},
+
 	addActionMaterialType: async function(material, materialType) {
 		let newAction = await i2ActionBuilder.createNewAction("i2ActionMaterialType");
-		newAction.setSceneRoot(this.scene);
+		newAction.setSceneRoot(editor.scene);
 		newAction.setMaterialSelector(new i2MaterialNameSelector(this.materials, material));
 		newAction.setValue(new i2Value(materialType));
 		newAction.setTags({autoAction: "materialType"})
