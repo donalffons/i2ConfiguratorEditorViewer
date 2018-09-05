@@ -204,7 +204,7 @@ Editor.prototype = {
 	addActionMaterialType: async function(material, materialType) {
 		let newAction = await i2ActionBuilder.createNewAction("i2ActionMaterialType");
 		newAction.setSceneRoot(this.scene);
-		newAction.setMaterialSelector(new i2MaterialNameSelector(this.materials, this.scene, material));
+		newAction.setMaterialSelector(new i2MaterialNameSelector(this.materials, material));
 		newAction.setValue(new i2Value(materialType));
 		newAction.setTags({autoAction: "materialType"})
 
