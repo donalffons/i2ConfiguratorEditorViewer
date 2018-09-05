@@ -300,6 +300,27 @@ UI.Input.prototype.setValue = function ( value ) {
 
 };
 
+UI.Input.prototype.setEnabled = function( enabled ) {
+	if(enabled === undefined || enabled == null) {
+		enabled = false;
+	}
+	this.dom.disabled = !enabled;
+	this.dom.classList.remove("ui-enabled")
+	this.dom.classList.remove("ui-disabled")
+	var classname;
+	if(enabled) {
+		classname = "ui-enabled";
+	} else {
+		classname = "ui-disabled";
+	}
+	this.dom.classList.add(classname);
+	return this;
+};
+
+UI.Input.prototype.getEnabled = function( ) {
+	return !this.dom.disabled;
+};
+
 
 // TextArea
 
