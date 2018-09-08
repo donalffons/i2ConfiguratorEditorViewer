@@ -672,12 +672,6 @@ Sidebar.Material = function ( editor ) {
 
 			}
 
-			if ( material.name !== undefined ) {
-
-				editor.execute( new SetMaterialValueCommand( currentObject, 'name', materialName.getValue(), currentMaterialSlot ) );
-				
-			}
-
 			if ( material.color !== undefined && material.color.getHex() !== materialColor.getHexValue() ) {
 
 				editor.execute( new SetMaterialColorCommand( currentObject, 'color', materialColor.getHexValue(), currentMaterialSlot ) );
@@ -1081,6 +1075,12 @@ Sidebar.Material = function ( editor ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'wireframeLinewidth', materialWireframeLinewidth.getValue(), currentMaterialSlot ) );
 
+			}
+
+			if ( material.name !== undefined ) {
+
+				editor.execute( new SetMaterialValueCommand( currentObject, 'name', materialName.getValue(), currentMaterialSlot ) );
+				
 			}
 
 			refreshUI();
