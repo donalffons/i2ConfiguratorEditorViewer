@@ -633,27 +633,31 @@ Sidebar.Material = function ( editor ) {
 			if ( material.overrides ) {
 				if(materialClassOverride.dom.checked && !material.overrides.materialType_overridden) {
 					material.overrides.materialType_overridden = true;
-					editor.execute(new AddActionMaterialTypeCommand(material, materialClass.getValue(), (action) => {material.overrides.materialType_autoAction = action;}));
+					editor.execute(new AddActionMaterialTypeCommand(material, materialClass.getValue(), (action) => {
+						material.overrides.materialType_autoAction = action;
+						refreshUI();
+					}));
 				} else if (!materialClassOverride.dom.checked && material.overrides.materialType_overridden) {
 					material.overrides.materialType_overridden = false;
 					editor.execute(new RemoveActionMaterialTypeCommand(material.overrides.materialType_autoAction, () => {material.overrides.materialType_autoAction = null;}));
 				}
 
-				if(materialColorOverride.dom.checked && !material.overrides.materialColor_overridden) {
-					material.overrides.materialColor_overridden = true;
-					editor.execute(new AddActionMaterialPropertyCommand(material, "color", materialColor.getValue(), (action) => {material.overrides.materialColor_autoAction = action;}));
-				} else if (!materialColorOverride.dom.checked && material.overrides.materialColor_overridden) {
-					material.overrides.materialColor_overridden = false;
-					editor.execute(new RemoveActionMaterialPropertyCommand(material.overrides.materialColor_autoAction, () => {material.overrides.materialColor_autoAction = null;}));
+				if(materialColorOverride.dom.checked && (!material.userData.overrides["color"] || !material.userData.overrides["color"].overridden)) {
+					editor.execute(new AddActionMaterialPropertyCommand(material, "color", materialColor.getValue(), (action) => {
+						material.userData.overrides["color"].autoAction = action;
+						refreshUI();
+					}));
+				} else if (!materialColorOverride.dom.checked && material.userData.overrides && material.userData.overrides["color"] && material.userData.overrides["color"].overridden) {
+					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["color"].autoAction, () => {delete material.userData.overrides["color"]}));
 				}
 
 				if(material.overrides.materialType_autoAction) {
 					material.overrides.materialType_autoAction.getValue().setValueData(materialClass.getValue());
 					material.overrides.materialType_autoAction.execute();
 				}
-				if(material.overrides.materialColor_autoAction) {
-					material.overrides.materialColor_autoAction.getValue().setValueData(materialColor.getValue());
-					material.overrides.materialColor_autoAction.execute();
+				if(material.userData.overrides && material.userData.overrides["color"] && material.userData.overrides["color"].overridden && material.userData.overrides["color"].autoAction) {
+					material.userData.overrides["color"].autoAction.getValue().setValueData(materialColor.getValue());
+					material.userData.overrides["color"].autoAction.execute();
 				}
 			} else if ( material instanceof THREE[ materialClass.getValue() ] === false ) {
 
@@ -1160,14 +1164,14 @@ Sidebar.Material = function ( editor ) {
 
 		var material = currentObject.material;
 		
-		if(material.overrides) {
+		if(material.userData.overrides) {
 			materialClassOverride.dom.hidden = false;
 			materialClassOverride.dom.checked = material.overrides.materialType_overridden;
 			materialClass.setEnabled(material.overrides.materialType_overridden);
 
 			materialColorOverride.dom.hidden = false;
-			materialColorOverride.dom.checked = material.overrides.materialColor_overridden;
-			materialColor.setEnabled(material.overrides.materialColor_overridden);
+			materialColorOverride.dom.checked = material.userData.overrides["color"] ? material.userData.overrides["color"].overridden : false;
+			materialColor.setEnabled(material.userData.overrides["color"] ? material.userData.overrides["color"].overridden : false);
 		} else {
 			materialClassOverride.dom.hidden = true;
 			materialClassOverride.dom.checked = false;

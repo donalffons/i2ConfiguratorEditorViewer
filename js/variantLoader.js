@@ -34,8 +34,7 @@ async function LoadModelVariant() {
                     action.setSceneRoot(editor.scene);
                 } else if (action.getType() == "i2ActionMaterialProperty") {
                     action.getMaterialSelector().setMaterialCollection(editor.materials);
-                    let material = action.getMaterialSelector().getMaterial();// UGLY HACK!
-                    material.overrides.materialColor_default = material.color.clone();
+                    action.initialize();
                 }
                 if(action.getTags().autoAction !== undefined) {
                     if(action.getTags().autoAction == "addObject") {
@@ -67,8 +66,7 @@ async function LoadModelVariant() {
                     material.overrides.materialType_autoAction.setSceneRoot(editor.scene);
                 } else if (action.getTags().autoAction == "material.color") {
                     let material = action.getMaterialSelector().getMaterial();
-					material.overrides.materialColor_overridden = true;
-                    material.overrides.materialColor_autoAction = action;
+                    material.userData.overrides[action.getProperty()].autoAction = action;
                 }
                 editor.signals.sceneGraphChanged.dispatch();
             });
