@@ -379,13 +379,11 @@ Sidebar.Object = function ( editor ) {
 				editor.execute( new SetPositionCommand( object, newPosition ) );
 			}
 
-			if(object.overrides) {
-				if(objectPositionOverride.dom.checked && !object.overrides.position_overridden) {
-					object.overrides.position_overridden = true;	
-					editor.execute(new AddActionObjectPropertyCommand(object, "position", object.position, (action) => {object.overrides.position_autoAction = action;}));
-				} else if (!objectPositionOverride.dom.checked && object.overrides.position_overridden) {
-					object.overrides.position_overridden = false;
-					editor.execute(new RemoveActionObjectPropertyCommand(object.overrides.position_autoAction, () => {object.overrides.position_autoAction = null;}));
+			if(object.userData.overrides) {
+				if(objectPositionOverride.dom.checked && (!object.userData.overrides["position"] || !object.userData.overrides["position"].overridden)) {
+					editor.execute(new AddActionObjectPropertyCommand(object, "position", object.position, (action) => {object.userData.overrides["position"].autoAction = action;}));
+				} else if (!objectPositionOverride.dom.checked && object.userData.overrides["position"] && object.userData.overrides["position"].overridden) {
+					editor.execute(new RemoveActionObjectPropertyCommand(object.userData.overrides["position"].autoAction, () => {delete object.userData.overrides["position"].autoAction;}));
 				}
 			}
 
@@ -394,13 +392,11 @@ Sidebar.Object = function ( editor ) {
 				editor.execute( new SetRotationCommand( object, newRotation ) );
 			}
 			
-			if(object.overrides) {
-				if(objectRotationOverride.dom.checked && !object.overrides.rotation_overridden) {
-					object.overrides.rotation_overridden = true;
-					editor.execute(new AddActionObjectPropertyCommand(object, "rotation", object.rotation, (action) => {object.overrides.rotation_autoAction = action;}));
-				} else if (!objectRotationOverride.dom.checked && object.overrides.rotation_overridden) {
-					object.overrides.rotation_overridden = false;
-					editor.execute(new RemoveActionObjectPropertyCommand(object.overrides.rotation_autoAction, () => {object.overrides.rotation_autoAction = null;}));
+			if(object.userData.overrides) {
+				if(objectRotationOverride.dom.checked && (!object.userData.overrides["rotation"] || !object.userData.overrides["rotation"].overridden)) {
+					editor.execute(new AddActionObjectPropertyCommand(object, "rotation", object.rotation, (action) => {object.userData.overrides["rotation"].autoAction = action;}));
+				} else if (!objectRotationOverride.dom.checked && object.userData.overrides["rotation"] && object.userData.overrides["rotation"].overridden) {
+					editor.execute(new RemoveActionObjectPropertyCommand(object.userData.overrides["rotation"].autoAction, () => {delete object.userData.overrides["rotation"].autoAction;}));
 				}
 			}
 
@@ -409,13 +405,11 @@ Sidebar.Object = function ( editor ) {
 				editor.execute( new SetScaleCommand( object, newScale ) );
 			}
 			
-			if(object.overrides) {
-				if(objectScaleOverride.dom.checked && !object.overrides.scale_overridden) {
-					object.overrides.scale_overridden = true;
-					editor.execute(new AddActionObjectPropertyCommand(object, "scale", object.scale, (action) => {object.overrides.scale_autoAction = action;}));
-				} else if (!objectScaleOverride.dom.checked && object.overrides.scale_overridden) {
-					object.overrides.scale_overridden = false;
-					editor.execute(new RemoveActionObjectPropertyCommand(object.overrides.scale_autoAction, () => {object.overrides.scale_autoAction = null;}));
+			if(object.userData.overrides) {
+				if(objectScaleOverride.dom.checked && (!object.userData.overrides["scale"] || !object.userData.overrides["scale"].overridden)) {
+					editor.execute(new AddActionObjectPropertyCommand(object, "scale", object.scale, (action) => {object.userData.overrides["scale"].autoAction = action;}));
+				} else if (!objectScaleOverride.dom.checked && object.userData.overrides["scale"] && object.userData.overrides["scale"].overridden) {
+					editor.execute(new RemoveActionObjectPropertyCommand(object.userData.overrides["scale"].autoAction, () => {delete object.userData.overrides["scale"].autoAction;}));
 				}
 			}
 
@@ -606,15 +600,15 @@ Sidebar.Object = function ( editor ) {
 
 		if ( object !== editor.selected ) return;
 
-		if(object.overrides) {
-			if(object.overrides.position_autoAction !== undefined && object.overrides.position_autoAction != null) {
-				object.overrides.position_autoAction.setValue(new i2Value(object.position));
+		if(object.userData.overrides) {
+			if(object.userData.overrides["position"] && object.userData.overrides["position"].autoAction !== undefined && object.userData.overrides["position"].autoAction != null) {
+				object.userData.overrides["position"].autoAction.setValue(new i2Value(object.position));
 			}
-			if(object.overrides.rotation_autoAction !== undefined && object.overrides.rotation_autoAction != null) {
-				object.overrides.rotation_autoAction.setValue(new i2Value(object.rotation));
+			if(object.userData.overrides["rotation"] && object.userData.overrides["rotation"].autoAction !== undefined && object.userData.overrides["rotation"].autoAction != null) {
+				object.userData.overrides["rotation"].autoAction.setValue(new i2Value(object.rotation));
 			}
-			if(object.overrides.scale_autoAction !== undefined && object.overrides.scale_autoAction != null) {
-				object.overrides.scale_autoAction.setValue(new i2Value(object.scale));
+			if(object.userData.overrides["scale"] && object.userData.overrides["scale"].autoAction !== undefined && object.userData.overrides["scale"].autoAction != null) {
+				object.userData.overrides["scale"].autoAction.setValue(new i2Value(object.scale));
 			}
 		}
 
@@ -635,10 +629,10 @@ Sidebar.Object = function ( editor ) {
 	});
 
 	function updateTransformControlsVisibility(object) {
-		if( !object.overrides ||
-		   ((viewport.transformControls.getMode() == "translate" && object.overrides.position_overridden) ||
-			(viewport.transformControls.getMode() == "rotate" && object.overrides.rotation_overridden) ||
-			(viewport.transformControls.getMode() == "scale" && object.overrides.scale_overridden))) {
+		if( !object.userData.overrides ||
+		   ((viewport.transformControls.getMode() == "translate" && object.userData.overrides["position"] && object.userData.overrides["position"].overridden) ||
+			(viewport.transformControls.getMode() == "rotate" && object.userData.overrides["rotation"] && object.userData.overrides["rotation"].overridden) ||
+			(viewport.transformControls.getMode() == "scale" && object.userData.overrides["scale"] && object.userData.overrides["scale"].overridden))) {
 			viewport.transformControls.attach(object);
 		} else {
 			viewport.transformControls.detach();
@@ -654,24 +648,24 @@ Sidebar.Object = function ( editor ) {
 		//objectUUID.setValue( object.uuid );
 		//objectName.setValue( object.name );
 
-		if(object.overrides) {
+		if(object.userData.overrides) {
 			objectPositionOverride.dom.hidden = false;
-			objectPositionOverride.dom.checked = object.overrides.position_overridden;
-			objectPositionX.setEnabled(object.overrides.position_overridden);
-			objectPositionY.setEnabled(object.overrides.position_overridden);
-			objectPositionZ.setEnabled(object.overrides.position_overridden);
+			objectPositionOverride.dom.checked = object.userData.overrides["position"] ? object.userData.overrides["position"].overridden : false;
+			objectPositionX.setEnabled(objectPositionOverride.dom.checked);
+			objectPositionY.setEnabled(objectPositionOverride.dom.checked);
+			objectPositionZ.setEnabled(objectPositionOverride.dom.checked);
 
 			objectRotationOverride.dom.hidden = false;
-			objectRotationOverride.dom.checked = object.overrides.rotation_overridden;
-			objectRotationX.setEnabled(object.overrides.rotation_overridden);
-			objectRotationY.setEnabled(object.overrides.rotation_overridden);
-			objectRotationZ.setEnabled(object.overrides.rotation_overridden);
+			objectRotationOverride.dom.checked = object.userData.overrides["rotation"] ? object.userData.overrides["rotation"].overridden : false;
+			objectRotationX.setEnabled(objectRotationOverride.dom.checked);
+			objectRotationY.setEnabled(objectRotationOverride.dom.checked);
+			objectRotationZ.setEnabled(objectRotationOverride.dom.checked);
 
 			objectScaleOverride.dom.hidden = false;
-			objectScaleOverride.dom.checked = object.overrides.scale_overridden;
-			objectScaleX.setEnabled(object.overrides.scale_overridden);
-			objectScaleY.setEnabled(object.overrides.scale_overridden);
-			objectScaleZ.setEnabled(object.overrides.scale_overridden);
+			objectScaleOverride.dom.checked = object.userData.overrides["scale"] ? object.userData.overrides["scale"].overridden : false;
+			objectScaleX.setEnabled(objectScaleOverride.dom.checked);
+			objectScaleY.setEnabled(objectScaleOverride.dom.checked);
+			objectScaleZ.setEnabled(objectScaleOverride.dom.checked);
 		} else {
 			objectPositionOverride.dom.checked = false;
 			objectPositionOverride.dom.hidden = true;
@@ -701,7 +695,7 @@ Sidebar.Object = function ( editor ) {
 		objectScaleY.setValue( object.scale.y );
 		objectScaleZ.setValue( object.scale.z );
 
-		if(object.overrides) {
+		if(object.userData.overrides) {
 			objectNearRow.dom.hidden = true;
 			objectFarRow.dom.hidden = true;
 			objectIntensityRow.dom.hidden = true;
@@ -808,11 +802,11 @@ Sidebar.Object = function ( editor ) {
 				objectShadowRadius.setValue( object.shadow.radius );
 
 			}
-
-			objectVisible.setValue( object.visible );
-			objectFrustumCulled.setValue( object.frustumCulled );
-			objectRenderOrder.setValue( object.renderOrder );
 		}
+
+		objectVisible.setValue( object.visible );
+		objectFrustumCulled.setValue( object.frustumCulled );
+		objectRenderOrder.setValue( object.renderOrder );
 
 		/*try {
 

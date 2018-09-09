@@ -29,12 +29,14 @@ async function LoadModelVariant() {
             actions.forEach((action) => {
                 if(action.getType() == "i2ActionObjectProperty" || action.getType() == "i2ActionAddObject") {
                     action.getObjectsSelector().setSceneRoot(editor.scene);
-                } else if (action.getType() == "i2ActionMaterialType") {
-                    action.getMaterialSelector().setMaterialCollection(editor.materials);
                     action.initialize();
-                    action.setSceneRoot(editor.scene);
-                } else if (action.getType() == "i2ActionMaterialProperty") {
-                    action.getMaterialSelector().setMaterialCollection(editor.materials);
+                } else {
+                    if (action.getType() == "i2ActionMaterialType") {
+                        action.getMaterialSelector().setMaterialCollection(editor.materials);
+                        action.setSceneRoot(editor.scene);
+                    } else if (action.getType() == "i2ActionMaterialProperty") {
+                        action.getMaterialSelector().setMaterialCollection(editor.materials);
+                    }
                     action.initialize();
                 }
                 if(action.getTags().autoAction !== undefined) {
@@ -48,18 +50,10 @@ async function LoadModelVariant() {
                 if( action.getTags().autoAction == "object.position" ||
                     action.getTags().autoAction == "object.rotation" ||
                     action.getTags().autoAction == "object.scale" ) {
-                    object = action.getObjectsSelector().getObjects()[0];
-                    if(action.getTags().autoAction == "object.position") {
-                        object.overrides.position_overridden = true;
-                        object.overrides.position_autoAction = action;
-                    } else if(action.getTags().autoAction == "object.rotation") {
-                        object.overrides.rotation_overridden = true;
-                        object.overrides.rotation_autoAction = action;
-                    } else if(action.getTags().autoAction == "object.scale") {
-                        object.overrides.scale_overridden = true;
-                        object.overrides.scale_autoAction = action;
-                    }
-                    editor.signals.objectChanged.dispatch(object);
+                    action.getObjectsSelector().getObjects().forEach((object) => {
+                        object.userData.overrides[action.getProperty()].autoAction = action;
+                        editor.signals.objectChanged.dispatch(object);
+                    });
                 } else if (action.getTags().autoAction == "materialType") {
                     let material = action.getMaterialSelector().getMaterial();
 					material.userData.overrides["materialType"].overridden = true;

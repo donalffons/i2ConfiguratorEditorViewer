@@ -163,12 +163,15 @@ Editor.prototype = {
 
 	addActionObjectProperty: async function ( object, property, value ) {
 		let newAction = await i2ActionBuilder.createNewAction("i2ActionObjectProperty");
-		newAction.setObjectsSelector(new i2ObjectsHierarchySelector(this.scene, [object]));
-		newAction.setProperty(property);
-		newAction.setValue(new i2Value(value));
-		newAction.setTags({autoAction: "object."+property})
+		newAction.initialize({
+			objectsSelector: new i2ObjectsHierarchySelector(this.scene, [object]),
+			property: property,
+			value: new i2Value(value),
+			tags: {autoAction: "object."+property}
+		});
 
 		getCurrentVariant().addAction(newAction);
+		newAction.execute();
 
 		this.signals.refreshSidebarObject3D.dispatch( object );
 
@@ -176,29 +179,13 @@ Editor.prototype = {
 	},
 
 	removeActionObjectProperty: async function ( action ) {
-		action.getObjectsSelector().setSceneRoot(editor.scene);
 		let object = action.getObjectsSelector().getObjects()[0];
-		let currTags = action.getTags();
 
+		action.revert();
 		getCurrentVariant().removeAction(action);
-		
-		if(currTags.autoAction !== undefined) {
-			if(currTags.autoAction == "object.position") {
-				object.position.copy(object.overrides.position_default);
-				object.overrides.position_overridden = false;
-				object.overrides.position_autoAction = null;
-			} else if(currTags.autoAction == "object.rotation") {
-				object.rotation.copy(object.overrides.rotation_default);
-				object.overrides.rotation_overridden = false;
-				object.overrides.rotation_autoAction = null;
-			} else if(currTags.autoAction == "object.scale") {
-				object.scale.copy(object.overrides.scale_default);
-				object.overrides.scale_overridden = false;
-				object.overrides.scale_autoAction = null;
-			}
-			this.signals.objectChanged.dispatch(object);
-			this.signals.refreshSidebarObject3D.dispatch( object );
-		}
+
+		this.signals.objectChanged.dispatch(object);
+		this.signals.refreshSidebarObject3D.dispatch( object );
 	},
 
 	addActionMaterialProperty: async function ( material, property, value ) {
@@ -218,9 +205,6 @@ Editor.prototype = {
 	},
 
 	removeActionMaterialProperty: async function ( action ) {
-		let material = action.getMaterialSelector().getMaterial();
-		let currTags = action.getTags();
-
 		action.revert();
 		getCurrentVariant().removeAction(action);
 

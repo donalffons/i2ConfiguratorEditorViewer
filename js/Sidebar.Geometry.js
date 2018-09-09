@@ -145,7 +145,7 @@ Sidebar.Geometry = function ( editor ) {
 
 		var object = editor.selected;
 
-		if ( object && object.geometry && !object.overrides) {
+		if ( object && object.geometry && !object.userData.overrides) {
 
 			var geometry = object.geometry;
 
