@@ -2,12 +2,12 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-var Viewport = function ( editor, id ) {
+var Viewport = function ( editor ) {
 
 	var signals = editor.signals;
 
 	var container = new UI.Panel();
-	container.setId( id );
+	container.setId( 'viewport' );
 	container.setPosition( 'absolute' );
 
 	container.add( new Viewport.Info( editor ) );
@@ -62,6 +62,12 @@ var Viewport = function ( editor, id ) {
 		if ( object !== undefined ) {
 
 			selectionBox.setFromObject( object );
+
+			if ( editor.helpers[ object.id ] !== undefined ) {
+
+				editor.helpers[ object.id ].update();
+
+			}
 
 			signals.refreshSidebarObject3D.dispatch( object );
 
@@ -264,7 +270,6 @@ var Viewport = function ( editor, id ) {
 	var controls = new THREE.EditorControls( camera, container.dom );
 	controls.addEventListener( 'change', function () {
 
-		transformControls.update();
 		signals.cameraChanged.dispatch( camera );
 
 	} );
@@ -386,7 +391,6 @@ var Viewport = function ( editor, id ) {
 		if ( editor.selected === object ) {
 
 			selectionBox.setFromObject( object );
-			transformControls.update();
 
 		}
 
@@ -396,11 +400,23 @@ var Viewport = function ( editor, id ) {
 
 		}
 
+		if ( editor.helpers[ object.id ] !== undefined ) {
+
+			editor.helpers[ object.id ].update();
+
+		}
+
 		render();
 
 	} );
 
 	signals.objectRemoved.add( function ( object ) {
+
+		if ( object === transformControls.object ) {
+
+			transformControls.detach();
+
+		}
 
 		object.traverse( function ( child ) {
 

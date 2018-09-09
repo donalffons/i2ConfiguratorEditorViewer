@@ -44,7 +44,7 @@ select {
 
 /* UI */
 
-#viewport-editor {
+#viewport {
 	position: absolute;
 	top: 32px;
 	left: 0;
@@ -52,18 +52,10 @@ select {
 	bottom: 0;
 }
 
-#viewport-editor #info {
-	text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
-	pointer-events: none;
-}
-
-#viewport-viewer {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-}
+	#viewport #info {
+		text-shadow: 1px 1px 0 rgba(0,0,0,0.25);
+		pointer-events: none;
+	}
 
 #script {
 	position: absolute;

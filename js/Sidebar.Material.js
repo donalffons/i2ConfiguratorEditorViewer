@@ -116,7 +116,9 @@ Sidebar.Material = function ( editor ) {
 	// name
 
 	var materialNameRow = new UI.Row();
-	var materialName = new UI.Input().setWidth( '150px' ).setFontSize( '12px' ).onChange(function(){update();});
+	var materialName = new UI.Input().setWidth( '150px' ).setFontSize( '12px' ).onChange(function(){
+		editor.execute( new SetMaterialValueCommand( editor.selected, 'name', materialName.getValue(), currentMaterialSlot ) );
+	} );
 
 	materialNameRow.add( new UI.Text( 'Name' ).setWidth( '90px' ) );
 	materialNameRow.add( materialName );
@@ -613,7 +615,7 @@ Sidebar.Material = function ( editor ) {
 
 		if ( currentMaterialSlot !== previousSelectedSlot ) refreshUI( true );
 
-		var material = editor.getObjectMaterial( currentObject, currentMaterialSlot )
+		var material = editor.getObjectMaterial( currentObject, currentMaterialSlot );
 
 		var textureWarning = false;
 		var objectHasUvs = false;

@@ -97,9 +97,9 @@ Sidebar.Object = function ( editor ) {
 	// position
 
 	var objectPositionRow = new UI.Row();
-	var objectPositionX = new UI.Number().setWidth( '50px' ).onChange( update );
-	var objectPositionY = new UI.Number().setWidth( '50px' ).onChange( update );
-	var objectPositionZ = new UI.Number().setWidth( '50px' ).onChange( update );
+	var objectPositionX = new UI.Number().setPrecision( 3 ).setWidth( '50px' ).onChange( update );
+	var objectPositionY = new UI.Number().setPrecision( 3 ).setWidth( '50px' ).onChange( update );
+	var objectPositionZ = new UI.Number().setPrecision( 3 ).setWidth( '50px' ).onChange( update );
 
 	objectPositionRow.add( new UI.Text( 'Position' ).setWidth( '90px' ) );
 	var objectPositionOverride = new UI.Checkbox().onChange( function(){update();});
@@ -125,10 +125,10 @@ Sidebar.Object = function ( editor ) {
 	// scale
 
 	var objectScaleRow = new UI.Row();
-	var objectScaleLock = new UI.Checkbox( true );
-	var objectScaleX = new UI.Number( 1 ).setRange( 0.01, Infinity ).setWidth( '50px' ).onChange( updateScaleX );
-	var objectScaleY = new UI.Number( 1 ).setRange( 0.01, Infinity ).setWidth( '50px' ).onChange( updateScaleY );
-	var objectScaleZ = new UI.Number( 1 ).setRange( 0.01, Infinity ).setWidth( '50px' ).onChange( updateScaleZ );
+	var objectScaleLock = new UI.Checkbox( true ).setPosition( 'absolute' ).setLeft( '75px' );
+	var objectScaleX = new UI.Number( 1 ).setPrecision( 3 ).setRange( 0.001, Infinity ).setWidth( '50px' ).onChange( updateScaleX );
+	var objectScaleY = new UI.Number( 1 ).setPrecision( 3 ).setRange( 0.001, Infinity ).setWidth( '50px' ).onChange( updateScaleY );
+	var objectScaleZ = new UI.Number( 1 ).setPrecision( 3 ).setRange( 0.001, Infinity ).setWidth( '50px' ).onChange( updateScaleZ );
 
 	objectScaleRow.add( new UI.Text( 'Scale' ).setWidth( '90px' ) );
 	var objectScaleOverride = new UI.Checkbox().onChange( function(){update();});
@@ -270,7 +270,7 @@ Sidebar.Object = function ( editor ) {
 	var objectFrustumCulledRow = new UI.Row();
 	var objectFrustumCulled = new UI.Checkbox().onChange( update );
 
-	objectFrustumCulledRow.add( new UI.Text( 'Frustum Culled' ).setWidth( '90px' ) );
+	objectFrustumCulledRow.add( new UI.Text( 'Frustum Cull' ).setWidth( '90px' ) );
 	objectFrustumCulledRow.add( objectFrustumCulled );
 
 	container.add( objectFrustumCulledRow );

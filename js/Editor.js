@@ -74,6 +74,7 @@ var Editor = function () {
 
 	this.config = new Config();
 	this.history = new History( this );
+	this.storage = new Storage();
 	this.loader = new Loader( this );
 
 	this.camera = this.DEFAULT_CAMERA.clone();
@@ -530,6 +531,7 @@ Editor.prototype = {
 	clear: function () {
 
 		this.history.clear();
+		this.storage.clear();
 
 		this.camera.copy( this.DEFAULT_CAMERA );
 		this.scene.background.setHex( 0xaaaaaa );
