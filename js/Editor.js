@@ -230,10 +230,12 @@ Editor.prototype = {
 
 	addActionMaterialType: async function(material, materialType) {
 		let newAction = await i2ActionBuilder.createNewAction("i2ActionMaterialType");
-		newAction.setSceneRoot(editor.scene);
-		newAction.setMaterialSelector(new i2MaterialNameSelector(this.materials, material));
-		newAction.setValue(new i2Value(materialType));
-		newAction.setTags({autoAction: "materialType"})
+		newAction.initialize({
+			materialSelector: new i2MaterialNameSelector(this.materials, material),
+			sceneRoot: editor.scene,
+			value: new i2Value(materialType),
+			tags: {autoAction: "materialType"}
+		});
 
 		getCurrentVariant().addAction(newAction);
 		newAction.execute();
@@ -247,16 +249,12 @@ Editor.prototype = {
 		action.getMaterialSelector().setMaterialCollection(this.materials);
 		let material = action.getMaterialSelector().getMaterial();
 		let currTags = action.getTags();
+
+		action.revert();
 		getCurrentVariant().removeAction(action);
-		
-		if(currTags.autoAction !== undefined) {
-			if(currTags.autoAction == "materialType") {
-				action.revert(material.overrides.materialType_default);
-				material.overrides.materialType_overridden = false;
-				material.overrides.materialType_autoAction = null;
-			}
-			this.signals.sceneGraphChanged.dispatch();
-		}
+
+		this.signals.objectChanged.dispatch(editor.selected);
+		this.signals.refreshSidebarObject3D.dispatch( editor.selected );
 	},
 
 	moveObject: function ( object, parent, before ) {
@@ -326,12 +324,9 @@ Editor.prototype = {
 
 		this.materials[ material.uuid ] = material;
 		if(overridable) {
-			if(!material.overrides) {
-				material.overrides = {};
+			if(!material.userData.overrides) {
 				material.userData.overrides = {};
 			}
-			material.overrides.materialType_default = material.constructor.name;
-			material.overrides.materialType_overridden = false
 		}
 
 	},

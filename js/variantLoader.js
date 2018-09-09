@@ -31,6 +31,7 @@ async function LoadModelVariant() {
                     action.getObjectsSelector().setSceneRoot(editor.scene);
                 } else if (action.getType() == "i2ActionMaterialType") {
                     action.getMaterialSelector().setMaterialCollection(editor.materials);
+                    action.initialize();
                     action.setSceneRoot(editor.scene);
                 } else if (action.getType() == "i2ActionMaterialProperty") {
                     action.getMaterialSelector().setMaterialCollection(editor.materials);
@@ -61,9 +62,9 @@ async function LoadModelVariant() {
                     editor.signals.objectChanged.dispatch(object);
                 } else if (action.getTags().autoAction == "materialType") {
                     let material = action.getMaterialSelector().getMaterial();
-					material.overrides.materialType_overridden = true;
-                    material.overrides.materialType_autoAction = action;
-                    material.overrides.materialType_autoAction.setSceneRoot(editor.scene);
+					material.userData.overrides["materialType"].overridden = true;
+                    material.userData.overrides["materialType"].autoAction = action;
+                    material.userData.overrides["materialType"].autoAction.setSceneRoot(editor.scene);
                 } else if (action.getTags().autoAction == "material.color") {
                     let material = action.getMaterialSelector().getMaterial();
                     material.userData.overrides[action.getProperty()].autoAction = action;

@@ -630,16 +630,16 @@ Sidebar.Material = function ( editor ) {
 
 			}*/
 
-			if ( material.overrides ) {
-				if(materialClassOverride.dom.checked && !material.overrides.materialType_overridden) {
-					material.overrides.materialType_overridden = true;
+			if ( material.userData.overrides ) {
+				if(materialClassOverride.dom.checked && (!material.userData.overrides["materialType"] || !material.userData.overrides["materialType"].overridden)) {
 					editor.execute(new AddActionMaterialTypeCommand(material, materialClass.getValue(), (action) => {
-						material.overrides.materialType_autoAction = action;
+						material.userData.overrides["materialType"].autoAction = action;
 						refreshUI();
 					}));
-				} else if (!materialClassOverride.dom.checked && material.overrides.materialType_overridden) {
-					material.overrides.materialType_overridden = false;
-					editor.execute(new RemoveActionMaterialTypeCommand(material.overrides.materialType_autoAction, () => {material.overrides.materialType_autoAction = null;}));
+				} else if (!materialClassOverride.dom.checked && material.userData.overrides["materialType"] && material.userData.overrides["materialType"].overridden) {
+					editor.execute(new RemoveActionMaterialTypeCommand(material.userData.overrides["materialType"].autoAction, () => {
+						delete material.userData.overrides["materialType"].autoAction;
+					}));
 				}
 
 				if(materialColorOverride.dom.checked && (!material.userData.overrides["color"] || !material.userData.overrides["color"].overridden)) {
@@ -647,15 +647,15 @@ Sidebar.Material = function ( editor ) {
 						material.userData.overrides["color"].autoAction = action;
 						refreshUI();
 					}));
-				} else if (!materialColorOverride.dom.checked && material.userData.overrides && material.userData.overrides["color"] && material.userData.overrides["color"].overridden) {
+				} else if (!materialColorOverride.dom.checked && material.userData.overrides["color"] && material.userData.overrides["color"].overridden) {
 					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["color"].autoAction, () => {delete material.userData.overrides["color"]}));
 				}
 
-				if(material.overrides.materialType_autoAction) {
-					material.overrides.materialType_autoAction.getValue().setValueData(materialClass.getValue());
-					material.overrides.materialType_autoAction.execute();
+				if(material.userData.overrides["materialType"] && material.userData.overrides["materialType"].overridden && material.userData.overrides["materialType"].autoAction) {
+					material.userData.overrides["materialType"].autoAction.getValue().setValueData(materialClass.getValue());
+					material.userData.overrides["materialType"].autoAction.execute();
 				}
-				if(material.userData.overrides && material.userData.overrides["color"] && material.userData.overrides["color"].overridden && material.userData.overrides["color"].autoAction) {
+				if(material.userData.overrides["color"] && material.userData.overrides["color"].overridden && material.userData.overrides["color"].autoAction) {
 					material.userData.overrides["color"].autoAction.getValue().setValueData(materialColor.getValue());
 					material.userData.overrides["color"].autoAction.execute();
 				}
@@ -1166,8 +1166,8 @@ Sidebar.Material = function ( editor ) {
 		
 		if(material.userData.overrides) {
 			materialClassOverride.dom.hidden = false;
-			materialClassOverride.dom.checked = material.overrides.materialType_overridden;
-			materialClass.setEnabled(material.overrides.materialType_overridden);
+			materialClassOverride.dom.checked = material.userData.overrides["materialType"] ? material.userData.overrides["materialType"].overridden : false;
+			materialClass.setEnabled(material.userData.overrides["materialType"] ? material.userData.overrides["materialType"].overridden : false);
 
 			materialColorOverride.dom.hidden = false;
 			materialColorOverride.dom.checked = material.userData.overrides["color"] ? material.userData.overrides["color"].overridden : false;
