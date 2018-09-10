@@ -70,7 +70,7 @@ async function LoadModelVariant() {
 					material.userData.overrides["materialType"].overridden = true;
                     material.userData.overrides["materialType"].autoAction = action;
                     material.userData.overrides["materialType"].autoAction.setSceneRoot(editor.scene);
-                } else if (action.getTags().autoAction == "material.color") {
+                } else if (action.getTags().autoAction == "material.color" || action.getTags().autoAction == "material.mapImage") {
                     let material = action.getMaterialSelector().getMaterial();
                     material.userData.overrides[action.getProperty()].autoAction = action;
                 }

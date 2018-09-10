@@ -298,17 +298,14 @@ Sidebar.Material = function ( editor ) {
 	// map
 
 	var materialMapRow = new UI.Row();
-	var materialMapEnabled = new UI.Checkbox( false ).onChange( update );
-	var materialMap = new UI.Texture().onChange( update );
+	var materialMap = new UI.ServerTexture().onChange( function() { update(); } );
 
 	materialMapRow.add( new UI.Text( 'Map' ).setWidth( '90px' ) );
 	var materialMapOverride = new UI.Checkbox().onChange( function(){update();});
 	materialMapRow.add( materialMapOverride );
-	materialMapRow.add( materialMapEnabled );
 	materialMapRow.add( materialMap );
 
 	container.add( materialMapRow );
-	materialMapRow.dom.hidden = true;
 
 	// alpha map
 
@@ -654,13 +651,13 @@ Sidebar.Material = function ( editor ) {
 					refreshUI();
 				}
 
-				if(materialMapOverride.dom.checked && (!material.userData.overrides["map"] || !material.userData.overrides["map"].overridden)) {
-					editor.execute(new AddActionMaterialPropertyCommand(material, "map", materialMap.getValue(), (action) => {
-						material.userData.overrides["map"].autoAction = action;
+				if(materialMapOverride.dom.checked && (!material.userData.overrides["mapImage"] || !material.userData.overrides["mapImage"].overridden)) {
+					editor.execute(new AddActionMaterialPropertyCommand(material, "mapImage", materialMap.getValue().image.src, (action) => {
+						material.userData.overrides["mapImage"].autoAction = action;
 						refreshUI();
 					}));
-				} else if (!materialMapOverride.dom.checked && material.userData.overrides["map"] && material.userData.overrides["map"].overridden) {
-					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["map"].autoAction, () => {delete material.userData.overrides["map"]}));
+				} else if (!materialMapOverride.dom.checked && material.userData.overrides["mapImage"] && material.userData.overrides["mapImage"].overridden) {
+					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["mapImage"].autoAction, () => {delete material.userData.overrides["mapImage"]}));
 					refreshUI();
 				}
 
@@ -671,6 +668,10 @@ Sidebar.Material = function ( editor ) {
 				if(material.userData.overrides["color"] && material.userData.overrides["color"].overridden && material.userData.overrides["color"].autoAction) {
 					material.userData.overrides["color"].autoAction.getValue().setValueData(materialColor.getValue());
 					material.userData.overrides["color"].autoAction.execute();
+				}
+				if(material.userData.overrides["mapImage"] && material.userData.overrides["mapImage"].overridden && material.userData.overrides["mapImage"].autoAction) {
+					material.userData.overrides["mapImage"].autoAction.getValue().setValueData(materialMap.getValue().image.src);
+					material.userData.overrides["mapImage"].autoAction.execute();
 				}
 			} else if ( material instanceof THREE[ materialClass.getValue() ] === false ) {
 
@@ -753,11 +754,9 @@ Sidebar.Material = function ( editor ) {
 
 			if ( material.map !== undefined ) {
 
-				var mapEnabled = materialMapEnabled.getValue() === true;
-
 				if ( objectHasUvs ) {
 
-					var map = mapEnabled ? materialMap.getValue() : null;
+					var map = materialMap.getValue() ? materialMap.getValue() : null;
 					if ( material.map !== map ) {
 
 						editor.execute( new SetMaterialMapCommand( currentObject, 'map', map, currentMaterialSlot ) );
@@ -1185,6 +1184,10 @@ Sidebar.Material = function ( editor ) {
 			materialColorOverride.dom.hidden = false;
 			materialColorOverride.dom.checked = material.userData.overrides["color"] ? material.userData.overrides["color"].overridden : false;
 			materialColor.setEnabled(material.userData.overrides["color"] ? material.userData.overrides["color"].overridden : false);
+
+			materialMapOverride.dom.hidden = false;
+			materialMapOverride.dom.checked = material.userData.overrides["mapImage"] ? material.userData.overrides["mapImage"].overridden : false;
+			materialMap.setEnabled(material.userData.overrides["mapImage"] ? material.userData.overrides["mapImage"].overridden : false);
 		} else {
 			materialClassOverride.dom.hidden = true;
 			materialClassOverride.dom.checked = false;
@@ -1193,6 +1196,10 @@ Sidebar.Material = function ( editor ) {
 			materialColorOverride.dom.hidden = true;
 			materialColorOverride.dom.checked = false;
 			materialColor.setEnabled(true);
+
+			materialMapOverride.dom.hidden = true;
+			materialMapOverride.dom.checked = false;
+			materialMap.setEnabled(true);
 		}
 
 		if ( Array.isArray( material ) ) {
@@ -1288,8 +1295,6 @@ Sidebar.Material = function ( editor ) {
 		}
 
 		if ( material.map !== undefined ) {
-
-			materialMapEnabled.setValue( material.map !== null );
 
 			if ( material.map !== null || resetTextureSelectors ) {
 
