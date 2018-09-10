@@ -651,6 +651,17 @@ Sidebar.Material = function ( editor ) {
 					}));
 				} else if (!materialColorOverride.dom.checked && material.userData.overrides["color"] && material.userData.overrides["color"].overridden) {
 					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["color"].autoAction, () => {delete material.userData.overrides["color"]}));
+					refreshUI();
+				}
+
+				if(materialMapOverride.dom.checked && (!material.userData.overrides["map"] || !material.userData.overrides["map"].overridden)) {
+					editor.execute(new AddActionMaterialPropertyCommand(material, "map", materialMap.getValue(), (action) => {
+						material.userData.overrides["map"].autoAction = action;
+						refreshUI();
+					}));
+				} else if (!materialMapOverride.dom.checked && material.userData.overrides["map"] && material.userData.overrides["map"].overridden) {
+					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["map"].autoAction, () => {delete material.userData.overrides["map"]}));
+					refreshUI();
 				}
 
 				if(material.userData.overrides["materialType"] && material.userData.overrides["materialType"].overridden && material.userData.overrides["materialType"].autoAction) {
