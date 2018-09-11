@@ -195,7 +195,6 @@ Sidebar.Material = function ( editor ) {
 	materialMetalnessRow.add( materialMetalness );
 
 	container.add( materialMetalnessRow );
-	materialMetalnessRow.dom.hidden = true;
 
 	// emissive
 
@@ -670,6 +669,20 @@ Sidebar.Material = function ( editor ) {
 				if(material.userData.overrides["roughness"] && material.userData.overrides["roughness"].overridden && material.userData.overrides["roughness"].autoAction) {
 					material.userData.overrides["roughness"].autoAction.getValue().setValueData(materialRoughness.getValue());
 					material.userData.overrides["roughness"].autoAction.execute();
+				}
+
+				if(materialMetalnessOverride.dom.checked && (!material.userData.overrides["metalness"] || !material.userData.overrides["metalness"].overridden)) {
+					editor.execute(new AddActionMaterialPropertyCommand(material, "metalness", materialMetalness.getValue(), (action) => {
+						material.userData.overrides["metalness"].autoAction = action;
+						refreshUI();
+					}));
+				} else if (!materialMetalnessOverride.dom.checked && material.userData.overrides["metalness"] && material.userData.overrides["metalness"].overridden) {
+					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["metalness"].autoAction, () => {delete material.userData.overrides["metalness"]}));
+					refreshUI();
+				}
+				if(material.userData.overrides["metalness"] && material.userData.overrides["metalness"].overridden && material.userData.overrides["metalness"].autoAction) {
+					material.userData.overrides["metalness"].autoAction.getValue().setValueData(materialMetalness.getValue());
+					material.userData.overrides["metalness"].autoAction.execute();
 				}
 
 				let materialMapValue = materialMap.getValue();
@@ -1211,6 +1224,10 @@ Sidebar.Material = function ( editor ) {
 			materialRoughnessOverride.dom.hidden = false;
 			materialRoughnessOverride.dom.checked = material.userData.overrides["roughness"] ? material.userData.overrides["roughness"].overridden : false;
 			materialRoughness.setEnabled(material.userData.overrides["roughness"] ? material.userData.overrides["roughness"].overridden : false);
+
+			materialMetalnessOverride.dom.hidden = false;
+			materialMetalnessOverride.dom.checked = material.userData.overrides["metalness"] ? material.userData.overrides["metalness"].overridden : false;
+			materialMetalness.setEnabled(material.userData.overrides["metalness"] ? material.userData.overrides["metalness"].overridden : false);
 		} else {
 			materialClassOverride.dom.hidden = true;
 			materialClassOverride.dom.checked = false;
@@ -1227,6 +1244,10 @@ Sidebar.Material = function ( editor ) {
 			materialRoughnessOverride.dom.hidden = true;
 			materialRoughnessOverride.dom.checked = false;
 			materialRoughness.setEnabled(true);
+
+			materialMetalnessOverride.dom.hidden = true;
+			materialMetalnessOverride.dom.checked = false;
+			materialMetalness.setEnabled(true);
 		}
 
 		if ( Array.isArray( material ) ) {
