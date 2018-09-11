@@ -652,13 +652,13 @@ Sidebar.Material = function ( editor ) {
 				}
 
 				if(materialMapOverride.dom.checked && (!material.userData.overrides["mapImage"] || !material.userData.overrides["mapImage"].overridden)) {
-					editor.execute(new AddActionMaterialPropertyCommand(material, "mapImage", materialMap.getValue().image.src, (action) => {
+					editor.execute(new AddActionMaterialPropertyCommand(material, "mapImage", materialMap.getValue() != null ? materialMap.getValue().image.src : null, (action) => {
 						material.userData.overrides["mapImage"].autoAction = action;
 						refreshUI();
 					}));
 				} else if (!materialMapOverride.dom.checked && material.userData.overrides["mapImage"] && material.userData.overrides["mapImage"].overridden) {
 					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["mapImage"].autoAction, () => {delete material.userData.overrides["mapImage"]}));
-					refreshUI();
+					refreshUI(true);
 				}
 
 				if(material.userData.overrides["materialType"] && material.userData.overrides["materialType"].overridden && material.userData.overrides["materialType"].autoAction) {
