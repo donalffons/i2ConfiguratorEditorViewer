@@ -329,7 +329,11 @@ Sidebar.Material = function ( editor ) {
 	materialSkinningRow.add( materialSkinning );
 
 	container.add( materialSkinningRow );
-	materialSkinningRow.dom.hidden = true;
+
+	overrideProperties["skinning"] = {
+		value: materialSkinning,
+		override: materialSkinningOverride
+	};
 
 	// map
 
@@ -573,7 +577,11 @@ Sidebar.Material = function ( editor ) {
 	materialShadingRow.add( materialShading );
 
 	container.add( materialShadingRow );
-	materialShadingRow.dom.hidden = true;
+
+	overrideProperties["shading"] = {
+		value: materialShading,
+		override: materialShadingOverride
+	};
 
 	// blending
 
@@ -625,7 +633,11 @@ Sidebar.Material = function ( editor ) {
 	materialTransparentRow.add( materialTransparent );
 
 	container.add( materialTransparentRow );
-	materialTransparentRow.dom.hidden = true;
+
+	overrideProperties["transparent"] = {
+		value: materialTransparent,
+		override: materialTransparentOverride
+	};
 
 	// alpha test
 
@@ -819,11 +831,11 @@ Sidebar.Material = function ( editor ) {
 
 			}
 
-			if ( material.skinning !== undefined && material.skinning !== materialSkinning.getValue() ) {
+			/*if ( material.skinning !== undefined && material.skinning !== materialSkinning.getValue() ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'skinning', materialSkinning.getValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
 			/*if ( material.map !== undefined ) {
 
