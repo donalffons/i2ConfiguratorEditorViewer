@@ -687,12 +687,9 @@ Sidebar.Material = function ( editor ) {
 	var materialWireframeOverride = new UI.Checkbox().onChange( function(){update();});
 	materialWireframeRow.add( materialWireframeOverride );
 	materialWireframeRow.add( materialWireframe );
-	var materialWireframeLinewidthOverride = new UI.Checkbox().onChange( function(){update();});
-	materialWireframeRow.add( materialWireframeLinewidthOverride );
 	materialWireframeRow.add( materialWireframeLinewidth );
 
 	container.add( materialWireframeRow );
-	materialWireframeRow.dom.hidden = true;
 
 	//
 
@@ -805,6 +802,34 @@ Sidebar.Material = function ( editor ) {
 							material.userData.overrides[overrideMapImageProperties[key].scaleKey].autoAction.execute();
 						}
 					}
+				}
+
+				if(materialWireframeOverride.dom.checked && (!material.userData.overrides["wireframe"] || !material.userData.overrides["wireframe"].overridden)) {
+					editor.execute(new AddActionMaterialPropertyCommand(material, "wireframe", materialWireframe.getValue(), (action) => {
+						material.userData.overrides["wireframe"].autoAction = action;
+						refreshUI();
+					}));
+					editor.execute(new AddActionMaterialPropertyCommand(material, "wireframeLinewidth", materialWireframeLinewidth.getValue(), (action) => {
+						material.userData.overrides["wireframeLinewidth"].autoAction = action;
+						refreshUI();
+					}));
+				} else if (!materialWireframeOverride.dom.checked && material.userData.overrides["wireframe"] && material.userData.overrides["wireframe"].overridden) {
+					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["wireframe"].autoAction, () => {
+						delete material.userData.overrides["wireframe"].autoAction;
+						refreshUI();
+					}));
+					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["wireframeLinewidth"].autoAction, () => {
+						delete material.userData.overrides["wireframeLinewidth"].autoAction;
+						refreshUI();
+					}));
+				}
+				if(material.userData.overrides["wireframe"] && material.userData.overrides["wireframe"].overridden && material.userData.overrides["wireframe"].autoAction) {
+					material.userData.overrides["wireframe"].autoAction.getValue().setValueData(materialWireframe.getValue());
+					material.userData.overrides["wireframe"].autoAction.execute();
+				}
+				if(material.userData.overrides["wireframeLinewidth"] && material.userData.overrides["wireframeLinewidth"].overridden && material.userData.overrides["wireframeLinewidth"].autoAction) {
+					material.userData.overrides["wireframeLinewidth"].autoAction.getValue().setValueData(materialWireframeLinewidth.getValue());
+					material.userData.overrides["wireframeLinewidth"].autoAction.execute();
 				}
 			} else if ( material instanceof THREE[ materialClass.getValue() ] === false ) {
 
@@ -1196,17 +1221,17 @@ Sidebar.Material = function ( editor ) {
 
 			}*/
 
-			if ( material.wireframe !== undefined && material.wireframe !== materialWireframe.getValue() ) {
+			/*if ( material.wireframe !== undefined && material.wireframe !== materialWireframe.getValue() ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'wireframe', materialWireframe.getValue(), currentMaterialSlot) );
 
-			}
+			}*/
 
-			if ( material.wireframeLinewidth !== undefined && Math.abs( material.wireframeLinewidth - materialWireframeLinewidth.getValue() ) >= 0.01 ) {
+			/*if ( material.wireframeLinewidth !== undefined && Math.abs( material.wireframeLinewidth - materialWireframeLinewidth.getValue() ) >= 0.01 ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'wireframeLinewidth', materialWireframeLinewidth.getValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
 			if ( material.name !== undefined ) {
 
@@ -1315,6 +1340,11 @@ Sidebar.Material = function ( editor ) {
 				overrideProperties[key].override.dom.checked = material.userData.overrides[key] ? material.userData.overrides[key].overridden : false;
 				overrideProperties[key].value.setEnabled(material.userData.overrides[key] ? material.userData.overrides[key].overridden : false);
 			}
+
+			materialWireframeOverride.dom.hidden = false;
+			materialWireframeOverride.dom.checked = material.userData.overrides["wireframe"] ? material.userData.overrides["wireframe"].overridden : false;
+			materialWireframe.setEnabled(material.userData.overrides["wireframe"] ? material.userData.overrides["wireframe"].overridden : false);
+			materialWireframeLinewidth.setEnabled(material.userData.overrides["wireframeLinewidth"] ? material.userData.overrides["wireframeLinewidth"].overridden : false);
 		} else {
 			materialClassOverride.dom.hidden = true;
 			materialClassOverride.dom.checked = false;
@@ -1335,6 +1365,10 @@ Sidebar.Material = function ( editor ) {
 				overrideProperties[key].override.dom.checked = false;
 				overrideProperties[key].value.setEnabled(true);
 			}
+			materialWireframeOverride.dom.hidden = false;
+			materialWireframeOverride.dom.checked = false;
+			materialWireframe.setEnabled(true);
+			materialWireframeLinewidth.setEnabled(true);
 		}
 
 		if ( Array.isArray( material ) ) {
