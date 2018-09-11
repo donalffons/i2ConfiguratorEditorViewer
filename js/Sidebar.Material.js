@@ -376,21 +376,23 @@ Sidebar.Material = function ( editor ) {
 	// bump map
 
 	var materialBumpMapRow = new UI.Row();
-	var materialBumpMapEnabled = new UI.Checkbox( false ).onChange( update );
-	var materialBumpMap = new UI.Texture().onChange( update );
+	var materialBumpMap = new UI.ServerTexture().onChange( update );
 	var materialBumpScale = new UI.Number( 1 ).setWidth( '30px' ).onChange( update );
 
 	materialBumpMapRow.add( new UI.Text( 'Bump Map' ).setWidth( '90px' ) );
 	var materialBumpMapOverride = new UI.Checkbox().onChange( function(){update();});
 	materialBumpMapRow.add( materialBumpMapOverride );
-	materialBumpMapRow.add( materialBumpMapEnabled );
 	materialBumpMapRow.add( materialBumpMap );
-	var materialBumpScaleOverride = new UI.Checkbox().onChange( function(){update();});
-	materialBumpMapRow.add( materialBumpScaleOverride );
 	materialBumpMapRow.add( materialBumpScale );
 
 	container.add( materialBumpMapRow );
-	materialBumpMapRow.dom.hidden = true;
+
+	overrideMapImageProperties["bumpMap"] = {
+		value: materialBumpMap,
+		scaleValue: materialBumpScale,
+		scaleKey: "bumpScale",
+		override: materialBumpMapOverride
+	};
 
 	// normal map
 
@@ -412,21 +414,23 @@ Sidebar.Material = function ( editor ) {
 	// displacement map
 
 	var materialDisplacementMapRow = new UI.Row();
-	var materialDisplacementMapEnabled = new UI.Checkbox( false ).onChange( update );
-	var materialDisplacementMap = new UI.Texture().onChange( update );
+	var materialDisplacementMap = new UI.ServerTexture().onChange( update );
 	var materialDisplacementScale = new UI.Number( 1 ).setWidth( '30px' ).onChange( update );
 
 	materialDisplacementMapRow.add( new UI.Text( 'Displace Map' ).setWidth( '90px' ) );
 	var materialDisplacementMapOverride = new UI.Checkbox().onChange( function(){update();});
 	materialDisplacementMapRow.add( materialDisplacementMapOverride );
-	materialDisplacementMapRow.add( materialDisplacementMapEnabled );
 	materialDisplacementMapRow.add( materialDisplacementMap );
-	var materialDisplacementScaleOverride = new UI.Checkbox().onChange( function(){update();});
-	materialDisplacementMapRow.add( materialDisplacementScaleOverride );
 	materialDisplacementMapRow.add( materialDisplacementScale );
 
 	container.add( materialDisplacementMapRow );
-	materialDisplacementMapRow.dom.hidden = true;
+
+	overrideMapImageProperties["displacementMap"] = {
+		value: materialDisplacementMap,
+		scaleValue: materialDisplacementScale,
+		scaleKey: "displacementScale",
+		override: materialDisplacementMapOverride
+	};
 
 	// roughness map
 
@@ -482,21 +486,23 @@ Sidebar.Material = function ( editor ) {
 	// env map
 
 	var materialEnvMapRow = new UI.Row();
-	var materialEnvMapEnabled = new UI.Checkbox( false ).onChange( update );
 	var materialEnvMap = new UI.Texture( THREE.SphericalReflectionMapping ).onChange( update );
 	var materialReflectivity = new UI.Number( 1 ).setWidth( '30px' ).onChange( update );
 
 	materialEnvMapRow.add( new UI.Text( 'Env Map' ).setWidth( '90px' ) );
 	var materialEnvMapOverride = new UI.Checkbox().onChange( function(){update();});
 	materialEnvMapRow.add( materialEnvMapOverride );
-	materialEnvMapRow.add( materialEnvMapEnabled );
 	materialEnvMapRow.add( materialEnvMap );
-	var materialReflectivityOverride = new UI.Checkbox().onChange( function(){update();});
-	materialEnvMapRow.add( materialReflectivityOverride );
 	materialEnvMapRow.add( materialReflectivity );
 
 	container.add( materialEnvMapRow );
-	materialEnvMapRow.dom.hidden = true;
+
+	overrideMapImageProperties["envMap"] = {
+		value: materialEnvMap,
+		scaleValue: materialDisplacementScale,
+		scaleKey: "reflectivity",
+		override: materialEnvMapOverride
+	};
 
 	// light map
 
@@ -518,21 +524,23 @@ Sidebar.Material = function ( editor ) {
 	// ambient occlusion map
 
 	var materialAOMapRow = new UI.Row();
-	var materialAOMapEnabled = new UI.Checkbox( false ).onChange( update );
 	var materialAOMap = new UI.Texture().onChange( update );
 	var materialAOScale = new UI.Number( 1 ).setRange( 0, 1 ).setWidth( '30px' ).onChange( update );
 
 	materialAOMapRow.add( new UI.Text( 'AO Map' ).setWidth( '90px' ) );
 	var materialAOMapOverride = new UI.Checkbox().onChange( function(){update();});
 	materialAOMapRow.add( materialAOMapOverride );
-	materialAOMapRow.add( materialAOMapEnabled );
 	materialAOMapRow.add( materialAOMap );
-	var materialAOScaleOverride = new UI.Checkbox().onChange( function(){update();});
-	materialAOMapRow.add( materialAOScaleOverride );
 	materialAOMapRow.add( materialAOScale );
 
 	container.add( materialAOMapRow );
-	materialAOMapRow.dom.hidden = true;
+
+	overrideMapImageProperties["aoMap"] = {
+		value: materialAOMap,
+		scaleValue: materialAOScale,
+		scaleKey: "aoMapIntensity",
+		override: materialAOMapOverride
+	};
 
 	// emissive map
 
@@ -726,6 +734,7 @@ Sidebar.Material = function ( editor ) {
 				} else if (!materialClassOverride.dom.checked && material.userData.overrides["materialType"] && material.userData.overrides["materialType"].overridden) {
 					editor.execute(new RemoveActionMaterialTypeCommand(material.userData.overrides["materialType"].autoAction, () => {
 						delete material.userData.overrides["materialType"].autoAction;
+						refreshUI();
 					}));
 				}
 				if(material.userData.overrides["materialType"] && material.userData.overrides["materialType"].overridden && material.userData.overrides["materialType"].autoAction) {
@@ -768,13 +777,33 @@ Sidebar.Material = function ( editor ) {
 							material.userData.overrides[key].autoAction = action;
 							refreshUI();
 						}));
+						if(overrideMapImageProperties[key].scaleValue !== undefined) {
+							editor.execute(new AddActionMaterialPropertyCommand(material, overrideMapImageProperties[key].scaleKey, overrideMapImageProperties[key].scaleValue.getValue(), (action) => {
+								material.userData.overrides[overrideMapImageProperties[key].scaleKey].autoAction = action;
+								refreshUI();
+							}));
+						}
 					} else if (!overrideMapImageProperties[key].override.dom.checked && material.userData.overrides[key] && material.userData.overrides[key].overridden) {
-						editor.execute(new RemoveActionMaterialMapImageCommand(material.userData.overrides[key].autoAction, () => {delete material.userData.overrides[key]}));
-						refreshUI(true);
+						editor.execute(new RemoveActionMaterialMapImageCommand(material.userData.overrides[key].autoAction, () => {
+							delete material.userData.overrides[key];
+							refreshUI(true);
+						}));
+						if(overrideMapImageProperties[key].scaleValue !== undefined) {
+							editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides[overrideMapImageProperties[key].scaleKey].autoAction, () => {
+								delete material.userData.overrides[overrideMapImageProperties[key].scaleKey]
+								refreshUI();
+							}));
+						}
 					}
 					if(material.userData.overrides[key] && material.userData.overrides[key].overridden && material.userData.overrides[key].autoAction) {
 						material.userData.overrides[key].autoAction.getValue().setValueData(materialMapValue);
 						material.userData.overrides[key].autoAction.execute();
+					}
+					if(overrideMapImageProperties[key].scaleValue !== undefined) {
+						if(material.userData.overrides[overrideMapImageProperties[key].scaleKey] && material.userData.overrides[overrideMapImageProperties[key].scaleKey].overridden && material.userData.overrides[overrideMapImageProperties[key].scaleKey].autoAction) {
+							material.userData.overrides[overrideMapImageProperties[key].scaleKey].autoAction.getValue().setValueData(overrideMapImageProperties[key].scaleValue.getValue());
+							material.userData.overrides[overrideMapImageProperties[key].scaleKey].autoAction.execute();
+						}
 					}
 				}
 			} else if ( material instanceof THREE[ materialClass.getValue() ] === false ) {
@@ -894,9 +923,7 @@ Sidebar.Material = function ( editor ) {
 
 			}*/
 
-			if ( material.bumpMap !== undefined ) {
-
-				var bumpMapEnabled = materialBumpMapEnabled.getValue() === true;
+			/*if ( material.bumpMap !== undefined ) {
 
 				if ( objectHasUvs ) {
 
@@ -919,7 +946,7 @@ Sidebar.Material = function ( editor ) {
 
 				}
 
-			}
+			}*/
 
 			/*if ( material.normalMap !== undefined ) {
 
@@ -942,7 +969,7 @@ Sidebar.Material = function ( editor ) {
 
 			}*/
 
-			if ( material.displacementMap !== undefined ) {
+			/*if ( material.displacementMap !== undefined ) {
 
 				var displacementMapEnabled = materialDisplacementMapEnabled.getValue() === true;
 
@@ -967,7 +994,7 @@ Sidebar.Material = function ( editor ) {
 
 				}
 
-			}
+			}*/
 
 			/*if ( material.roughnessMap !== undefined ) {
 
@@ -1026,7 +1053,7 @@ Sidebar.Material = function ( editor ) {
 
 			}*/
 
-			if ( material.envMap !== undefined ) {
+			/*if ( material.envMap !== undefined ) {
 
 				var envMapEnabled = materialEnvMapEnabled.getValue() === true;
 
@@ -1050,7 +1077,7 @@ Sidebar.Material = function ( editor ) {
 
 				}
 
-			}
+			}*/
 
 			/*if ( material.lightMap !== undefined ) {
 
@@ -1277,6 +1304,10 @@ Sidebar.Material = function ( editor ) {
 				overrideMapImageProperties[key].override.dom.hidden = false;
 				overrideMapImageProperties[key].override.dom.checked = material.userData.overrides[key] ? material.userData.overrides[key].overridden : false;
 				overrideMapImageProperties[key].value.setEnabled(material.userData.overrides[key] ? material.userData.overrides[key].overridden : false);
+				if(overrideMapImageProperties[key].scaleValue !== undefined) {
+					overrideMapImageProperties[key].scaleValue.dom.hidden = false;
+					overrideMapImageProperties[key].scaleValue.setEnabled(material.userData.overrides[key] ? material.userData.overrides[key].overridden : false);
+				}
 			}
 			
 			for (let key in overrideProperties) {
@@ -1293,6 +1324,10 @@ Sidebar.Material = function ( editor ) {
 				overrideMapImageProperties[key].override.dom.hidden = false;
 				overrideMapImageProperties[key].override.dom.checked = false;
 				overrideMapImageProperties[key].value.setEnabled(true);
+				if(overrideMapImageProperties[key].scaleValue !== undefined) {
+					overrideMapImageProperties[key].scaleValue.dom.hidden = false;
+					overrideMapImageProperties[key].scaleValue.setEnabled(true);
+				}
 			}
 
 			for (let key in overrideProperties) {
@@ -1416,8 +1451,6 @@ Sidebar.Material = function ( editor ) {
 
 		if ( material.bumpMap !== undefined ) {
 
-			materialBumpMapEnabled.setValue( material.bumpMap !== null );
-
 			if ( material.bumpMap !== null || resetTextureSelectors ) {
 
 				materialBumpMap.setValue( material.bumpMap );
@@ -1439,8 +1472,6 @@ Sidebar.Material = function ( editor ) {
 		}
 
 		if ( material.displacementMap !== undefined ) {
-
-			materialDisplacementMapEnabled.setValue( material.displacementMap !== null );
 
 			if ( material.displacementMap !== null || resetTextureSelectors ) {
 
@@ -1483,8 +1514,6 @@ Sidebar.Material = function ( editor ) {
 		}
 
 		if ( material.envMap !== undefined ) {
-
-			materialEnvMapEnabled.setValue( material.envMap !== null );
 
 			if ( material.envMap !== null || resetTextureSelectors ) {
 
