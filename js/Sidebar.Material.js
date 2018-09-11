@@ -651,13 +651,20 @@ Sidebar.Material = function ( editor ) {
 					refreshUI();
 				}
 
+				let materialMapValue = materialMap.getValue();
+				if(materialMapValue != null) {
+					let fullPath = decodeURI(materialMapValue.image.src);
+					let modelFolder = decodeURI(getModelFolder());
+					let relativePath = fullPath.substr(modelFolder.length);
+					materialMapValue = relativePath;
+				}
 				if(materialMapOverride.dom.checked && (!material.userData.overrides["mapImage"] || !material.userData.overrides["mapImage"].overridden)) {
-					editor.execute(new AddActionMaterialPropertyCommand(material, "mapImage", materialMap.getValue() != null ? materialMap.getValue().image.src : null, (action) => {
+					editor.execute(new AddActionMaterialMapImageCommand(material, "mapImage", materialMapValue, (action) => {
 						material.userData.overrides["mapImage"].autoAction = action;
 						refreshUI();
 					}));
 				} else if (!materialMapOverride.dom.checked && material.userData.overrides["mapImage"] && material.userData.overrides["mapImage"].overridden) {
-					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["mapImage"].autoAction, () => {delete material.userData.overrides["mapImage"]}));
+					editor.execute(new RemoveActionMaterialMapImageCommand(material.userData.overrides["mapImage"].autoAction, () => {delete material.userData.overrides["mapImage"]}));
 					refreshUI(true);
 				}
 
@@ -670,7 +677,7 @@ Sidebar.Material = function ( editor ) {
 					material.userData.overrides["color"].autoAction.execute();
 				}
 				if(material.userData.overrides["mapImage"] && material.userData.overrides["mapImage"].overridden && material.userData.overrides["mapImage"].autoAction) {
-					material.userData.overrides["mapImage"].autoAction.getValue().setValueData(materialMap.getValue().image.src);
+					material.userData.overrides["mapImage"].autoAction.getValue().setValueData(materialMapValue);
 					material.userData.overrides["mapImage"].autoAction.execute();
 				}
 			} else if ( material instanceof THREE[ materialClass.getValue() ] === false ) {

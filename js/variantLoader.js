@@ -47,6 +47,9 @@ async function LoadModelVariant() {
                         action.setSceneRoot(editor.scene);
                     } else if (action.getType() == "i2ActionMaterialProperty") {
                         action.getMaterialSelector().setMaterialCollection(editor.materials);
+                    } else if (action.getType() == "i2ActionMaterialMapImage") {
+                        action.getMaterialSelector().setMaterialCollection(editor.materials);
+                        action.setBaseDir(getModelFolder());
                     }
                     action.initialize();
                 }

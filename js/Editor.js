@@ -213,6 +213,31 @@ Editor.prototype = {
 		this.signals.refreshSidebarObject3D.dispatch( editor.selected );
 	},
 
+	addActionMaterialMapImage: async function ( material, property, value ) {
+		let newAction = await i2ActionBuilder.createNewAction("i2ActionMaterialMapImage");
+		newAction.initialize({
+			materialSelector: new i2MaterialNameSelector(this.materials, material),
+			property: property,
+			value: new i2Value(value),
+			baseDir: getModelFolder(),
+			tags: {autoAction: "material."+property}
+		});
+		getCurrentVariant().addAction(newAction);
+		newAction.execute();
+
+		this.signals.refreshSidebarObject3D.dispatch( editor.selected );
+
+		return newAction;
+	},
+
+	removeActionMaterialMapImage: async function ( action ) {
+		action.revert();
+		getCurrentVariant().removeAction(action);
+
+		this.signals.objectChanged.dispatch(editor.selected);
+		this.signals.refreshSidebarObject3D.dispatch( editor.selected );
+	},
+
 	addActionMaterialType: async function(material, materialType) {
 		let newAction = await i2ActionBuilder.createNewAction("i2ActionMaterialType");
 		newAction.initialize({
