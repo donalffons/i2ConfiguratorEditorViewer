@@ -316,7 +316,11 @@ Sidebar.Material = function ( editor ) {
 	materialVertexColorsRow.add( materialVertexColors );
 
 	container.add( materialVertexColorsRow );
-	materialVertexColorsRow.dom.hidden = true;
+
+	overrideProperties["vertexColors"] = {
+		value: materialVertexColors,
+		override: materialVertexColorsOverride
+	};
 
 	// skinning
 
@@ -564,7 +568,11 @@ Sidebar.Material = function ( editor ) {
 	materialSideRow.add( materialSide );
 
 	container.add( materialSideRow );
-	materialSideRow.dom.hidden = true;
+
+	overrideProperties["side"] = {
+		value: materialSide,
+		override: materialSideOverride
+	};
 
 	// shading
 
@@ -578,7 +586,7 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialShadingRow );
 
-	overrideProperties["shading"] = {
+	overrideProperties["flatShading"] = {
 		value: materialShading,
 		override: materialShadingOverride
 	};
@@ -604,6 +612,11 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialBlendingRow );
 	materialBlendingRow.dom.hidden = true;
+
+	overrideProperties["blending"] = {
+		value: materialBlending,
+		override: materialBlendingOverride
+	};
 
 	// opacity
 
@@ -721,17 +734,23 @@ Sidebar.Material = function ( editor ) {
 				}
 
 				for (let key in overrideProperties) {
+					let value = overrideProperties[key].value.getValue();
+					if(key == "vertexColors" || key == "side" || key == "blending") {
+						value = parseInt(value);
+					}
 					if(overrideProperties[key].override.dom.checked && (!material.userData.overrides[key] || !material.userData.overrides[key].overridden)) {
-						editor.execute(new AddActionMaterialPropertyCommand(material, key, overrideProperties[key].value.getValue(), (action) => {
+						editor.execute(new AddActionMaterialPropertyCommand(material, key, value, (action) => {
 							material.userData.overrides[key].autoAction = action;
 							refreshUI();
 						}));
 					} else if (!overrideProperties[key].override.dom.checked && material.userData.overrides[key] && material.userData.overrides[key].overridden) {
-						editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides[key].autoAction, () => {delete material.userData.overrides[key]}));
-						refreshUI();
+						editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides[key].autoAction, () => {
+							delete material.userData.overrides[key]
+							refreshUI();
+						}));
 					}
 					if(material.userData.overrides[key] && material.userData.overrides[key].overridden && material.userData.overrides[key].autoAction) {
-						material.userData.overrides[key].autoAction.getValue().setValueData(overrideProperties[key].value.getValue());
+						material.userData.overrides[key].autoAction.getValue().setValueData(value);
 						material.userData.overrides[key].autoAction.execute();
 					}
 				}
@@ -819,7 +838,7 @@ Sidebar.Material = function ( editor ) {
 
 			}*/
 
-			if ( material.vertexColors !== undefined ) {
+			/*if ( material.vertexColors !== undefined ) {
 
 				var vertexColors = parseInt( materialVertexColors.getValue() );
 
@@ -829,7 +848,7 @@ Sidebar.Material = function ( editor ) {
 
 				}
 
-			}
+			}*/
 
 			/*if ( material.skinning !== undefined && material.skinning !== materialSkinning.getValue() ) {
 
@@ -1098,7 +1117,7 @@ Sidebar.Material = function ( editor ) {
 
 			}*/
 
-			if ( material.side !== undefined ) {
+			/*if ( material.side !== undefined ) {
 
 				var side = parseInt( materialSide.getValue() );
 				if ( material.side !== side ) {
@@ -1108,9 +1127,9 @@ Sidebar.Material = function ( editor ) {
 				}
 
 
-			}
+			}*/
 
-			if ( material.flatShading !== undefined ) {
+			/*if ( material.flatShading !== undefined ) {
 
 				var flatShading = materialShading.getValue();
 				if ( material.flatShading != flatShading ) {
@@ -1119,9 +1138,9 @@ Sidebar.Material = function ( editor ) {
 
 				}
 
-			}
+			}*/
 
-			if ( material.blending !== undefined ) {
+			/*if ( material.blending !== undefined ) {
 
 				var blending = parseInt( materialBlending.getValue() );
 				if ( material.blending !== blending ) {
@@ -1130,7 +1149,7 @@ Sidebar.Material = function ( editor ) {
 
 				}
 
-			}
+			}*/
 
 			/*if ( material.opacity !== undefined && Math.abs( material.opacity - materialOpacity.getValue() ) >= 0.01 ) {
 
