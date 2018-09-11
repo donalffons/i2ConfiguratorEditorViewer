@@ -486,7 +486,7 @@ Sidebar.Material = function ( editor ) {
 	// env map
 
 	var materialEnvMapRow = new UI.Row();
-	var materialEnvMap = new UI.Texture( THREE.SphericalReflectionMapping ).onChange( update );
+	var materialEnvMap = new UI.ServerTexture( THREE.SphericalReflectionMapping ).onChange( update );
 	var materialReflectivity = new UI.Number( 1 ).setWidth( '30px' ).onChange( update );
 
 	materialEnvMapRow.add( new UI.Text( 'Env Map' ).setWidth( '90px' ) );
@@ -524,7 +524,7 @@ Sidebar.Material = function ( editor ) {
 	// ambient occlusion map
 
 	var materialAOMapRow = new UI.Row();
-	var materialAOMap = new UI.Texture().onChange( update );
+	var materialAOMap = new UI.ServerTexture().onChange( update );
 	var materialAOScale = new UI.Number( 1 ).setRange( 0, 1 ).setWidth( '30px' ).onChange( update );
 
 	materialAOMapRow.add( new UI.Text( 'AO Map' ).setWidth( '90px' ) );
@@ -1098,7 +1098,7 @@ Sidebar.Material = function ( editor ) {
 
 			}*/
 
-			if ( material.aoMap !== undefined ) {
+			/*if ( material.aoMap !== undefined ) {
 
 				var aoMapEnabled = materialAOMapEnabled.getValue() === true;
 
@@ -1123,7 +1123,7 @@ Sidebar.Material = function ( editor ) {
 
 				}
 
-			}
+			}*/
 
 			/*if ( material.emissiveMap !== undefined ) {
 
@@ -1540,8 +1540,6 @@ Sidebar.Material = function ( editor ) {
 		}
 
 		if ( material.aoMap !== undefined ) {
-
-			materialAOMapEnabled.setValue( material.aoMap !== null );
 
 			if ( material.aoMap !== null || resetTextureSelectors ) {
 
