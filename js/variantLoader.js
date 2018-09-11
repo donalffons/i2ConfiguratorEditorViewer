@@ -68,16 +68,15 @@ async function LoadModelVariant() {
                         object.userData.overrides[action.getProperty()].autoAction = action;
                         editor.signals.objectChanged.dispatch(object);
                     });
-                } else if (action.getTags().autoAction == "materialType") {
-                    let material = action.getMaterialSelector().getMaterial();
-					material.userData.overrides["materialType"].overridden = true;
-                    material.userData.overrides["materialType"].autoAction = action;
-                    material.userData.overrides["materialType"].autoAction.setSceneRoot(editor.scene);
-                } else if (action.getTags().autoAction == "material.color" || action.getTags().autoAction == "material.mapImage") {
+                } else {
                     let material = action.getMaterialSelector().getMaterial();
                     material.userData.overrides[action.getProperty()].autoAction = action;
+                    if (action.getTags().autoAction == "materialType") {
+                        material.userData.overrides["materialType"].overridden = true;
+                        material.userData.overrides["materialType"].autoAction.setSceneRoot(editor.scene);
+                    }
+                    editor.signals.sceneGraphChanged.dispatch();
                 }
-                editor.signals.sceneGraphChanged.dispatch();
             });
         }
     });
