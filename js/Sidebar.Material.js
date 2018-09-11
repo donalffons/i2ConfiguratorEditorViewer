@@ -183,7 +183,6 @@ Sidebar.Material = function ( editor ) {
 	materialRoughnessRow.add( materialRoughness );
 
 	container.add( materialRoughnessRow );
-	materialRoughnessRow.dom.hidden = true;
 
 	// metalness
 
@@ -640,6 +639,10 @@ Sidebar.Material = function ( editor ) {
 						delete material.userData.overrides["materialType"].autoAction;
 					}));
 				}
+				if(material.userData.overrides["materialType"] && material.userData.overrides["materialType"].overridden && material.userData.overrides["materialType"].autoAction) {
+					material.userData.overrides["materialType"].autoAction.getValue().setValueData(materialClass.getValue());
+					material.userData.overrides["materialType"].autoAction.execute();
+				}
 
 				if(materialColorOverride.dom.checked && (!material.userData.overrides["color"] || !material.userData.overrides["color"].overridden)) {
 					editor.execute(new AddActionMaterialPropertyCommand(material, "color", materialColor.getValue(), (action) => {
@@ -649,6 +652,24 @@ Sidebar.Material = function ( editor ) {
 				} else if (!materialColorOverride.dom.checked && material.userData.overrides["color"] && material.userData.overrides["color"].overridden) {
 					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["color"].autoAction, () => {delete material.userData.overrides["color"]}));
 					refreshUI();
+				}
+				if(material.userData.overrides["color"] && material.userData.overrides["color"].overridden && material.userData.overrides["color"].autoAction) {
+					material.userData.overrides["color"].autoAction.getValue().setValueData(materialColor.getValue());
+					material.userData.overrides["color"].autoAction.execute();
+				}
+
+				if(materialRoughnessOverride.dom.checked && (!material.userData.overrides["roughness"] || !material.userData.overrides["roughness"].overridden)) {
+					editor.execute(new AddActionMaterialPropertyCommand(material, "roughness", materialRoughness.getValue(), (action) => {
+						material.userData.overrides["roughness"].autoAction = action;
+						refreshUI();
+					}));
+				} else if (!materialRoughnessOverride.dom.checked && material.userData.overrides["roughness"] && material.userData.overrides["roughness"].overridden) {
+					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["roughness"].autoAction, () => {delete material.userData.overrides["roughness"]}));
+					refreshUI();
+				}
+				if(material.userData.overrides["roughness"] && material.userData.overrides["roughness"].overridden && material.userData.overrides["roughness"].autoAction) {
+					material.userData.overrides["roughness"].autoAction.getValue().setValueData(materialRoughness.getValue());
+					material.userData.overrides["roughness"].autoAction.execute();
 				}
 
 				let materialMapValue = materialMap.getValue();
@@ -666,15 +687,6 @@ Sidebar.Material = function ( editor ) {
 				} else if (!materialMapOverride.dom.checked && material.userData.overrides["mapImage"] && material.userData.overrides["mapImage"].overridden) {
 					editor.execute(new RemoveActionMaterialMapImageCommand(material.userData.overrides["mapImage"].autoAction, () => {delete material.userData.overrides["mapImage"]}));
 					refreshUI(true);
-				}
-
-				if(material.userData.overrides["materialType"] && material.userData.overrides["materialType"].overridden && material.userData.overrides["materialType"].autoAction) {
-					material.userData.overrides["materialType"].autoAction.getValue().setValueData(materialClass.getValue());
-					material.userData.overrides["materialType"].autoAction.execute();
-				}
-				if(material.userData.overrides["color"] && material.userData.overrides["color"].overridden && material.userData.overrides["color"].autoAction) {
-					material.userData.overrides["color"].autoAction.getValue().setValueData(materialColor.getValue());
-					material.userData.overrides["color"].autoAction.execute();
 				}
 				if(material.userData.overrides["mapImage"] && material.userData.overrides["mapImage"].overridden && material.userData.overrides["mapImage"].autoAction) {
 					material.userData.overrides["mapImage"].autoAction.getValue().setValueData(materialMapValue);
@@ -1195,6 +1207,10 @@ Sidebar.Material = function ( editor ) {
 			materialMapOverride.dom.hidden = false;
 			materialMapOverride.dom.checked = material.userData.overrides["mapImage"] ? material.userData.overrides["mapImage"].overridden : false;
 			materialMap.setEnabled(material.userData.overrides["mapImage"] ? material.userData.overrides["mapImage"].overridden : false);
+
+			materialRoughnessOverride.dom.hidden = false;
+			materialRoughnessOverride.dom.checked = material.userData.overrides["roughness"] ? material.userData.overrides["roughness"].overridden : false;
+			materialRoughness.setEnabled(material.userData.overrides["roughness"] ? material.userData.overrides["roughness"].overridden : false);
 		} else {
 			materialClassOverride.dom.hidden = true;
 			materialClassOverride.dom.checked = false;
@@ -1207,6 +1223,10 @@ Sidebar.Material = function ( editor ) {
 			materialMapOverride.dom.hidden = true;
 			materialMapOverride.dom.checked = false;
 			materialMap.setEnabled(true);
+
+			materialRoughnessOverride.dom.hidden = true;
+			materialRoughnessOverride.dom.checked = false;
+			materialRoughness.setEnabled(true);
 		}
 
 		if ( Array.isArray( material ) ) {
