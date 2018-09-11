@@ -4,7 +4,8 @@
 
 Sidebar.Material = function ( editor ) {
 
-	var overrideMapProperties = [];
+	var overrideMapImageProperties = [];
+	var overrideProperties = [];
 
 	var signals = editor.signals;
 
@@ -174,6 +175,11 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialColorRow );
 
+	overrideProperties["color"] = {
+		value: materialColor,
+		override: materialColorOverride
+	};
+
 	// roughness
 
 	var materialRoughnessRow = new UI.Row();
@@ -185,6 +191,11 @@ Sidebar.Material = function ( editor ) {
 	materialRoughnessRow.add( materialRoughness );
 
 	container.add( materialRoughnessRow );
+
+	overrideProperties["roughness"] = {
+		value: materialRoughness,
+		override: materialRoughnessOverride
+	};
 
 	// metalness
 
@@ -198,6 +209,11 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialMetalnessRow );
 
+	overrideProperties["metalness"] = {
+		value: materialMetalness,
+		override: materialMetalnessOverride
+	};
+
 	// emissive
 
 	var materialEmissiveRow = new UI.Row();
@@ -209,7 +225,11 @@ Sidebar.Material = function ( editor ) {
 	materialEmissiveRow.add( materialEmissive );
 
 	container.add( materialEmissiveRow );
-	materialEmissiveRow.dom.hidden = true;
+
+	overrideProperties["emissive"] = {
+		value: materialEmissive,
+		override: materialEmissiveOverride
+	};
 
 	// specular
 
@@ -222,7 +242,11 @@ Sidebar.Material = function ( editor ) {
 	materialSpecularRow.add( materialSpecular );
 
 	container.add( materialSpecularRow );
-	materialSpecularRow.dom.hidden = true;
+
+	overrideProperties["specular"] = {
+		value: materialSpecular,
+		override: materialSpecularOverride
+	};
 
 	// shininess
 
@@ -235,7 +259,11 @@ Sidebar.Material = function ( editor ) {
 	materialShininessRow.add( materialShininess );
 
 	container.add( materialShininessRow );
-	materialShininessRow.dom.hidden = true;
+
+	overrideProperties["shininess"] = {
+		value: materialShininess,
+		override: materialShininessOverride
+	};
 
 	// clearCoat
 
@@ -248,7 +276,11 @@ Sidebar.Material = function ( editor ) {
 	materialClearCoatRow.add( materialClearCoat );
 
 	container.add( materialClearCoatRow );
-	materialClearCoatRow.dom.hidden = true;
+
+	overrideProperties["clearCoat"] = {
+		value: materialClearCoat,
+		override: materialClearCoatOverride
+	};
 
 	// clearCoatRoughness
 
@@ -261,7 +293,11 @@ Sidebar.Material = function ( editor ) {
 	materialClearCoatRoughnessRow.add( materialClearCoatRoughness );
 
 	container.add( materialClearCoatRoughnessRow );
-	materialClearCoatRoughnessRow.dom.hidden = true;
+
+	overrideProperties["clearCoatRoughness"] = {
+		value: materialClearCoatRoughness,
+		override: materialClearCoatRoughnessOverride
+	};
 
 	// vertex colors
 
@@ -307,10 +343,10 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialMapRow );
 
-	overrideMapProperties["map"] = {
+	overrideMapImageProperties["map"] = {
 		value: materialMap,
 		override: materialMapOverride
-	}
+	};
 
 	// alpha map
 
@@ -324,10 +360,10 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialAlphaMapRow );
 
-	overrideMapProperties["alphaMap"] = {
+	overrideMapImageProperties["alphaMap"] = {
 		value: materialAlphaMap,
 		override: materialAlphaMapOverride
-	}
+	};
 
 	// bump map
 
@@ -360,10 +396,10 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialNormalMapRow );
 
-	overrideMapProperties["normalMap"] = {
+	overrideMapImageProperties["normalMap"] = {
 		value: materialNormalMap,
 		override: materialNormalMapOverride
-	}
+	};
 
 	// displacement map
 
@@ -396,10 +432,10 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialRoughnessMapRow );
 
-	overrideMapProperties["roughnessMap"] = {
+	overrideMapImageProperties["roughnessMap"] = {
 		value: materialRoughnessMap,
 		override: materialRoughnessMapOverride
-	}
+	};
 
 	// metalness map
 
@@ -413,10 +449,10 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialMetalnessMapRow );
 
-	overrideMapProperties["metalnessMap"] = {
+	overrideMapImageProperties["metalnessMap"] = {
 		value: materialMetalnessMap,
 		override: materialMetalnessMapOverride
-	}
+	};
 
 	// specular map
 
@@ -430,10 +466,10 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialSpecularMapRow );
 
-	overrideMapProperties["specularMap"] = {
+	overrideMapImageProperties["specularMap"] = {
 		value: materialSpecularMap,
 		override: materialSpecularMapOverride
-	}
+	};
 
 	// env map
 
@@ -466,10 +502,10 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialLightMapRow );
 
-	overrideMapProperties["lightMap"] = {
+	overrideMapImageProperties["lightMap"] = {
 		value: materialLightMap,
 		override: materialLightMapOverride
-	}
+	};
 
 	// ambient occlusion map
 
@@ -502,10 +538,10 @@ Sidebar.Material = function ( editor ) {
 
 	container.add( materialEmissiveMapRow );
 
-	overrideMapProperties["emissiveMap"] = {
+	overrideMapImageProperties["emissiveMap"] = {
 		value: materialEmissiveMap,
 		override: materialEmissiveMapOverride
-	}
+	};
 
 	// side
 
@@ -572,7 +608,11 @@ Sidebar.Material = function ( editor ) {
 	materialOpacityRow.add( materialOpacity );
 
 	container.add( materialOpacityRow );
-	materialOpacityRow.dom.hidden = true;
+
+	overrideProperties["opacity"] = {
+		value: materialOpacity,
+		override: materialOpacityOverride
+	};
 
 	// transparent
 
@@ -598,7 +638,11 @@ Sidebar.Material = function ( editor ) {
 	materialAlphaTestRow.add( materialAlphaTest );
 
 	container.add( materialAlphaTestRow );
-	materialAlphaTestRow.dom.hidden = true;
+
+	overrideProperties["alphaTest"] = {
+		value: materialAlphaTest,
+		override: materialAlphaTestOverride
+	};
 
 	// wireframe
 
@@ -664,62 +708,36 @@ Sidebar.Material = function ( editor ) {
 					material.userData.overrides["materialType"].autoAction.execute();
 				}
 
-				if(materialColorOverride.dom.checked && (!material.userData.overrides["color"] || !material.userData.overrides["color"].overridden)) {
-					editor.execute(new AddActionMaterialPropertyCommand(material, "color", materialColor.getValue(), (action) => {
-						material.userData.overrides["color"].autoAction = action;
+				for (let key in overrideProperties) {
+					if(overrideProperties[key].override.dom.checked && (!material.userData.overrides[key] || !material.userData.overrides[key].overridden)) {
+						editor.execute(new AddActionMaterialPropertyCommand(material, key, overrideProperties[key].value.getValue(), (action) => {
+							material.userData.overrides[key].autoAction = action;
+							refreshUI();
+						}));
+					} else if (!overrideProperties[key].override.dom.checked && material.userData.overrides[key] && material.userData.overrides[key].overridden) {
+						editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides[key].autoAction, () => {delete material.userData.overrides[key]}));
 						refreshUI();
-					}));
-				} else if (!materialColorOverride.dom.checked && material.userData.overrides["color"] && material.userData.overrides["color"].overridden) {
-					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["color"].autoAction, () => {delete material.userData.overrides["color"]}));
-					refreshUI();
+					}
+					if(material.userData.overrides[key] && material.userData.overrides[key].overridden && material.userData.overrides[key].autoAction) {
+						material.userData.overrides[key].autoAction.getValue().setValueData(overrideProperties[key].value.getValue());
+						material.userData.overrides[key].autoAction.execute();
+					}
 				}
-				if(material.userData.overrides["color"] && material.userData.overrides["color"].overridden && material.userData.overrides["color"].autoAction) {
-					material.userData.overrides["color"].autoAction.getValue().setValueData(materialColor.getValue());
-					material.userData.overrides["color"].autoAction.execute();
-				}
-
-				if(materialRoughnessOverride.dom.checked && (!material.userData.overrides["roughness"] || !material.userData.overrides["roughness"].overridden)) {
-					editor.execute(new AddActionMaterialPropertyCommand(material, "roughness", materialRoughness.getValue(), (action) => {
-						material.userData.overrides["roughness"].autoAction = action;
-						refreshUI();
-					}));
-				} else if (!materialRoughnessOverride.dom.checked && material.userData.overrides["roughness"] && material.userData.overrides["roughness"].overridden) {
-					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["roughness"].autoAction, () => {delete material.userData.overrides["roughness"]}));
-					refreshUI();
-				}
-				if(material.userData.overrides["roughness"] && material.userData.overrides["roughness"].overridden && material.userData.overrides["roughness"].autoAction) {
-					material.userData.overrides["roughness"].autoAction.getValue().setValueData(materialRoughness.getValue());
-					material.userData.overrides["roughness"].autoAction.execute();
-				}
-
-				if(materialMetalnessOverride.dom.checked && (!material.userData.overrides["metalness"] || !material.userData.overrides["metalness"].overridden)) {
-					editor.execute(new AddActionMaterialPropertyCommand(material, "metalness", materialMetalness.getValue(), (action) => {
-						material.userData.overrides["metalness"].autoAction = action;
-						refreshUI();
-					}));
-				} else if (!materialMetalnessOverride.dom.checked && material.userData.overrides["metalness"] && material.userData.overrides["metalness"].overridden) {
-					editor.execute(new RemoveActionMaterialPropertyCommand(material.userData.overrides["metalness"].autoAction, () => {delete material.userData.overrides["metalness"]}));
-					refreshUI();
-				}
-				if(material.userData.overrides["metalness"] && material.userData.overrides["metalness"].overridden && material.userData.overrides["metalness"].autoAction) {
-					material.userData.overrides["metalness"].autoAction.getValue().setValueData(materialMetalness.getValue());
-					material.userData.overrides["metalness"].autoAction.execute();
-				}
-
-				for (let key in overrideMapProperties) {
-					let materialMapValue = overrideMapProperties[key].value.getValue();
+				
+				for (let key in overrideMapImageProperties) {
+					let materialMapValue = overrideMapImageProperties[key].value.getValue();
 					if(materialMapValue != null) {
 						let fullPath = decodeURI(materialMapValue.image.src);
 						let modelFolder = decodeURI(getModelFolder());
 						let relativePath = fullPath.substr(modelFolder.length);
 						materialMapValue = relativePath;
 					}
-					if(overrideMapProperties[key].override.dom.checked && (!material.userData.overrides[key] || !material.userData.overrides[key].overridden)) {
+					if(overrideMapImageProperties[key].override.dom.checked && (!material.userData.overrides[key] || !material.userData.overrides[key].overridden)) {
 						editor.execute(new AddActionMaterialMapImageCommand(material, key, materialMapValue, (action) => {
 							material.userData.overrides[key].autoAction = action;
 							refreshUI();
 						}));
-					} else if (!overrideMapProperties[key].override.dom.checked && material.userData.overrides[key] && material.userData.overrides[key].overridden) {
+					} else if (!overrideMapImageProperties[key].override.dom.checked && material.userData.overrides[key] && material.userData.overrides[key].overridden) {
 						editor.execute(new RemoveActionMaterialMapImageCommand(material.userData.overrides[key].autoAction, () => {delete material.userData.overrides[key]}));
 						refreshUI(true);
 					}
@@ -759,35 +777,35 @@ Sidebar.Material = function ( editor ) {
 
 			}*/
 
-			if ( material.emissive !== undefined && material.emissive.getHex() !== materialEmissive.getHexValue() ) {
+			/*if ( material.emissive !== undefined && material.emissive.getHex() !== materialEmissive.getHexValue() ) {
 
 				editor.execute( new SetMaterialColorCommand( currentObject, 'emissive', materialEmissive.getHexValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
-			if ( material.specular !== undefined && material.specular.getHex() !== materialSpecular.getHexValue() ) {
+			/*if ( material.specular !== undefined && material.specular.getHex() !== materialSpecular.getHexValue() ) {
 
 				editor.execute( new SetMaterialColorCommand( currentObject, 'specular', materialSpecular.getHexValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
-			if ( material.shininess !== undefined && Math.abs( material.shininess - materialShininess.getValue() ) >= 0.01 ) {
+			/*if ( material.shininess !== undefined && Math.abs( material.shininess - materialShininess.getValue() ) >= 0.01 ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'shininess', materialShininess.getValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
-			if ( material.clearCoat !== undefined && Math.abs( material.clearCoat - materialClearCoat.getValue() ) >= 0.01 ) {
+			/*if ( material.clearCoat !== undefined && Math.abs( material.clearCoat - materialClearCoat.getValue() ) >= 0.01 ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'clearCoat', materialClearCoat.getValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
-			if ( material.clearCoatRoughness !== undefined && Math.abs( material.clearCoatRoughness - materialClearCoatRoughness.getValue() ) >= 0.01 ) {
+			/*if ( material.clearCoatRoughness !== undefined && Math.abs( material.clearCoatRoughness - materialClearCoatRoughness.getValue() ) >= 0.01 ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'clearCoatRoughness', materialClearCoatRoughness.getValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
 			if ( material.vertexColors !== undefined ) {
 
@@ -1102,23 +1120,23 @@ Sidebar.Material = function ( editor ) {
 
 			}
 
-			if ( material.opacity !== undefined && Math.abs( material.opacity - materialOpacity.getValue() ) >= 0.01 ) {
+			/*if ( material.opacity !== undefined && Math.abs( material.opacity - materialOpacity.getValue() ) >= 0.01 ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'opacity', materialOpacity.getValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
-			if ( material.transparent !== undefined && material.transparent !== materialTransparent.getValue() ) {
+			/*if ( material.transparent !== undefined && material.transparent !== materialTransparent.getValue() ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'transparent', materialTransparent.getValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
-			if ( material.alphaTest !== undefined && Math.abs( material.alphaTest - materialAlphaTest.getValue() ) >= 0.01 ) {
+			/*if ( material.alphaTest !== undefined && Math.abs( material.alphaTest - materialAlphaTest.getValue() ) >= 0.01 ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'alphaTest', materialAlphaTest.getValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
 			if ( material.wireframe !== undefined && material.wireframe !== materialWireframe.getValue() ) {
 
@@ -1224,46 +1242,33 @@ Sidebar.Material = function ( editor ) {
 			materialClassOverride.dom.checked = material.userData.overrides["materialType"] ? material.userData.overrides["materialType"].overridden : false;
 			materialClass.setEnabled(material.userData.overrides["materialType"] ? material.userData.overrides["materialType"].overridden : false);
 
-			materialColorOverride.dom.hidden = false;
-			materialColorOverride.dom.checked = material.userData.overrides["color"] ? material.userData.overrides["color"].overridden : false;
-			materialColor.setEnabled(material.userData.overrides["color"] ? material.userData.overrides["color"].overridden : false);
-
-			for (let key in overrideMapProperties) {
-				overrideMapProperties[key].override.dom.hidden = false;
-				overrideMapProperties[key].override.dom.checked = material.userData.overrides[key] ? material.userData.overrides[key].overridden : false;
-				overrideMapProperties[key].value.setEnabled(material.userData.overrides[key] ? material.userData.overrides[key].overridden : false);
+			for (let key in overrideMapImageProperties) {
+				overrideMapImageProperties[key].override.dom.hidden = false;
+				overrideMapImageProperties[key].override.dom.checked = material.userData.overrides[key] ? material.userData.overrides[key].overridden : false;
+				overrideMapImageProperties[key].value.setEnabled(material.userData.overrides[key] ? material.userData.overrides[key].overridden : false);
 			}
-
-			materialRoughnessOverride.dom.hidden = false;
-			materialRoughnessOverride.dom.checked = material.userData.overrides["roughness"] ? material.userData.overrides["roughness"].overridden : false;
-			materialRoughness.setEnabled(material.userData.overrides["roughness"] ? material.userData.overrides["roughness"].overridden : false);
-
-			materialMetalnessOverride.dom.hidden = false;
-			materialMetalnessOverride.dom.checked = material.userData.overrides["metalness"] ? material.userData.overrides["metalness"].overridden : false;
-			materialMetalness.setEnabled(material.userData.overrides["metalness"] ? material.userData.overrides["metalness"].overridden : false);
+			
+			for (let key in overrideProperties) {
+				overrideProperties[key].override.dom.hidden = false;
+				overrideProperties[key].override.dom.checked = material.userData.overrides[key] ? material.userData.overrides[key].overridden : false;
+				overrideProperties[key].value.setEnabled(material.userData.overrides[key] ? material.userData.overrides[key].overridden : false);
+			}
 		} else {
 			materialClassOverride.dom.hidden = true;
 			materialClassOverride.dom.checked = false;
 			materialClass.setEnabled(true);
 
-			materialColorOverride.dom.hidden = true;
-			materialColorOverride.dom.checked = false;
-			materialColor.setEnabled(true);
-
-
-			for (let key in overrideMapProperties) {
-				overrideMapProperties[key].override.dom.hidden = false;
-				overrideMapProperties[key].override.dom.checked = false;
-				overrideMapProperties[key].value.setEnabled(true);
+			for (let key in overrideMapImageProperties) {
+				overrideMapImageProperties[key].override.dom.hidden = false;
+				overrideMapImageProperties[key].override.dom.checked = false;
+				overrideMapImageProperties[key].value.setEnabled(true);
 			}
 
-			materialRoughnessOverride.dom.hidden = true;
-			materialRoughnessOverride.dom.checked = false;
-			materialRoughness.setEnabled(true);
-
-			materialMetalnessOverride.dom.hidden = true;
-			materialMetalnessOverride.dom.checked = false;
-			materialMetalness.setEnabled(true);
+			for (let key in overrideProperties) {
+				overrideProperties[key].override.dom.hidden = false;
+				overrideProperties[key].override.dom.checked = false;
+				overrideProperties[key].value.setEnabled(true);
+			}
 		}
 
 		if ( Array.isArray( material ) ) {
