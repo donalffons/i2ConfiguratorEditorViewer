@@ -718,7 +718,7 @@ Sidebar.Material = function ( editor ) {
 
 			}
 
-			if ( material.color !== undefined && material.color.getHex() !== materialColor.getHexValue() ) {
+			/*if ( material.color !== undefined && material.color.getHex() !== materialColor.getHexValue() ) {
 
 				editor.execute( new SetMaterialColorCommand( currentObject, 'color', materialColor.getHexValue(), currentMaterialSlot ) );
 
@@ -734,7 +734,7 @@ Sidebar.Material = function ( editor ) {
 
 				editor.execute( new SetMaterialValueCommand( currentObject, 'metalness', materialMetalness.getValue(), currentMaterialSlot ) );
 
-			}
+			}*/
 
 			if ( material.emissive !== undefined && material.emissive.getHex() !== materialEmissive.getHexValue() ) {
 
@@ -784,7 +784,7 @@ Sidebar.Material = function ( editor ) {
 
 			}
 
-			if ( material.map !== undefined ) {
+			/*if ( material.map !== undefined ) {
 
 				if ( objectHasUvs ) {
 
@@ -801,7 +801,7 @@ Sidebar.Material = function ( editor ) {
 
 				}
 
-			}
+			}*/
 
 			if ( material.alphaMap !== undefined ) {
 
