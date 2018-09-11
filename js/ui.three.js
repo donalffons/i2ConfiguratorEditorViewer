@@ -116,7 +116,12 @@ UI.ServerTexture.prototype.setValue = function ( texture ) {
 
 		if ( image !== undefined && image.width > 0 ) {
 
-			name.value = texture.sourceFile;
+			if(texture.sourceFile) {
+				name.value = texture.sourceFile;
+			} else if(texture.image && texture.image.src) {
+				let url = decodeURIComponent(texture.image.src.replace(/\+/g, ' '));
+				name.value = url.substring(url.lastIndexOf('/')+1);
+			}
 
 			var scale = canvas.width / image.width;
 			context.drawImage( image, 0, 0, image.width * scale, image.height * scale );
