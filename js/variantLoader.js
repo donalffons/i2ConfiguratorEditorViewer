@@ -14,10 +14,17 @@ function Load3DFile(filename, cb_progress) {
     xhr.open("GET",  getModelFolder()+filename);
     xhr.responseType = "blob";
     xhr.filename = filename;
+    xhr.upload.addEventListener('progress', (event) => {
+        event.stepName = "Loading file: " + filename;
+        cb_progress(event);
+    });
     xhr.onload = function(params) {
         params.currentTarget.response.name = params.currentTarget.filename;
         manager = new THREE.LoadingManager();
-        editor.loader.loadFile( params.currentTarget.response, manager, basefolder+"/WebGL Models/"+getCurrentModel().getPath()+"/" , params.currentTarget.objectAddPromise, cb_progress);
+        editor.loader.loadFile( params.currentTarget.response, manager, basefolder+"/WebGL Models/"+getCurrentModel().getPath()+"/" , params.currentTarget.objectAddPromise, (event) => {
+            event.stepName = "Parsing file: " + filename;
+            cb_progress(event);
+        });
     }
     xhr.objectAddPromise = $.Deferred()
     var objectAddPromise = xhr.objectAddPromise;
@@ -30,10 +37,9 @@ async function LoadModel(cb, cb_progress) {
     var objectAddPromises = [];
     for(let i = 0; i < filenames.length; i++) {
         objectAddPromises.push(Load3DFile(filenames[i], (event) => {
-            event.currStep = i+1;
-            event.totalSteps = filenames.length+1;
-            event.stepName = "Loading file: " + filenames[i];
-        cb_progress(event);
+            event.currFile = i+1;
+            event.totalFiles = filenames.length+1;
+            cb_progress(event);
     }));
     }
     $.when.apply($, objectAddPromises).done( () => {

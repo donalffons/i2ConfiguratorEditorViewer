@@ -257,13 +257,13 @@
 						LoadVariant();
 						loadingScreen.hide();
 					}, (event) => {
-						let step = event.currStep;
-						let totalSteps = event.totalSteps;
+						let currFile = event.currFile;
+						let totalFiles = event.totalFiles;
 						let stepName = event.stepName;
 						var size = '(' + Math.floor( event.total / 1000 ).format() + ' KB)';
 						var progress = Math.floor( ( event.loaded / event.total ) * 100 ) + '%';
 
-						loadingScreen.update(step, totalSteps, stepName, size, progress);
+						loadingScreen.update(currFile, totalFiles, stepName, size, progress);
 					});
 				});
 			});
