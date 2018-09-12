@@ -235,13 +235,13 @@
 						LoadVariant();
 						loadingScreen.hide();
 					}, (event) => {
-						let currFile = event.currFile;
-						let totalFiles = event.totalFiles;
+						let currStep = event.currFile;
+						let totalSteps = event.totalFiles;
 						let stepName = event.stepName;
 						var size = '(' + Math.floor( event.total / 1000 ).format() + ' KB)';
 						var progress = Math.floor( ( event.loaded / event.total ) * 100 ) + '%';
 
-						loadingScreen.update(currFile, totalFiles, stepName, size, progress);
+						loadingScreen.update(currStep, totalSteps, stepName, size, progress);
 					});
 				});
 			});
