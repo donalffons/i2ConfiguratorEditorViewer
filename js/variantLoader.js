@@ -8,10 +8,8 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function Load3DFile(filename, basefolder) {
-    if (basefolder === undefined) {
-        basefolder = getBaseFolder();
-    }
+function Load3DFile(filename, cb_progress) {
+    let basefolder = getBaseFolder();
     var xhr = new XMLHttpRequest(); 
     xhr.open("GET",  getModelFolder()+filename);
     xhr.responseType = "blob";
@@ -19,7 +17,7 @@ function Load3DFile(filename, basefolder) {
     xhr.onload = function(params) {
         params.currentTarget.response.name = params.currentTarget.filename;
         manager = new THREE.LoadingManager();
-        editor.loader.loadFile( params.currentTarget.response, manager, basefolder+"/WebGL Models/"+getCurrentModel().getPath()+"/" , params.currentTarget.objectAddPromise);
+        editor.loader.loadFile( params.currentTarget.response, manager, basefolder+"/WebGL Models/"+getCurrentModel().getPath()+"/" , params.currentTarget.objectAddPromise, cb_progress);
     }
     xhr.objectAddPromise = $.Deferred()
     var objectAddPromise = xhr.objectAddPromise;
@@ -27,59 +25,68 @@ function Load3DFile(filename, basefolder) {
     return objectAddPromise;
 }
 
-async function LoadModelVariant() {
-    let filenames = await getCurrentModel().get3DFiles();
+async function LoadModel(cb, cb_progress) {
+    var filenames = await getCurrentModel().get3DFiles();
     var objectAddPromises = [];
-    for(var i = 0; i < filenames.length; i++) {
-        objectAddPromises.push(Load3DFile(filenames[i]));
+    for(let i = 0; i < filenames.length; i++) {
+        objectAddPromises.push(Load3DFile(filenames[i], (event) => {
+            event.currStep = i+1;
+            event.totalSteps = filenames.length+1;
+            event.stepName = "Loading file: " + filenames[i];
+        cb_progress(event);
+    }));
     }
+    $.when.apply($, objectAddPromises).done( () => {
+        cb_progress({currStep: filenames.length+1, totalSteps: filenames.length+1, stepName: "Applying actions"});
+        cb();
+     } );
+}
 
-    $.when.apply($, objectAddPromises).done(async() => {
-        let actions = await getCurrentVariant().getActions();
-        if(actions !== undefined) {
-            actions.forEach((action) => {
-                if(action.getType() == "i2ActionObjectProperty" || action.getType() == "i2ActionAddObject") {
-                    action.getObjectsSelector().setSceneRoot(editor.scene);
-                    action.initialize();
-                } else {
-                    if (action.getType() == "i2ActionMaterialType") {
-                        action.getMaterialSelector().setMaterialCollection(editor.materials);
-                        action.setSceneRoot(editor.scene);
-                    } else if (action.getType() == "i2ActionMaterialProperty") {
-                        action.getMaterialSelector().setMaterialCollection(editor.materials);
-                    } else if (action.getType() == "i2ActionMaterialMapImage") {
-                        action.getMaterialSelector().setMaterialCollection(editor.materials);
-                        action.setBaseDir(getModelFolder());
-                    }
-                    action.initialize();
+async function LoadVariant() {
+    let actions = await getCurrentVariant().getActions();
+    if(actions !== undefined) {
+        actions.forEach((action) => {
+            if(action.getType() == "i2ActionObjectProperty" || action.getType() == "i2ActionAddObject") {
+                action.getObjectsSelector().setSceneRoot(editor.scene);
+                action.initialize();
+            } else {
+                if (action.getType() == "i2ActionMaterialType") {
+                    action.getMaterialSelector().setMaterialCollection(editor.materials);
+                    action.setSceneRoot(editor.scene);
+                } else if (action.getType() == "i2ActionMaterialProperty") {
+                    action.getMaterialSelector().setMaterialCollection(editor.materials);
+                } else if (action.getType() == "i2ActionMaterialMapImage") {
+                    action.getMaterialSelector().setMaterialCollection(editor.materials);
+                    action.setBaseDir(getModelFolder());
                 }
-                if(action.getTags().autoAction !== undefined) {
-                    if(action.getTags().autoAction == "addObject") {
-                        action.setOnObjectAdded(object => {
-                            editor.addHelper(object);
-                        });
-                    }
-                }
-                action.execute();
-                if( action.getTags().autoAction == "object.position" ||
-                    action.getTags().autoAction == "object.rotation" ||
-                    action.getTags().autoAction == "object.scale" ) {
-                    action.getObjectsSelector().getObjects().forEach((object) => {
-                        object.userData.overrides[action.getProperty()].autoAction = action;
-                        editor.signals.objectChanged.dispatch(object);
+                action.initialize();
+            }
+            if(action.getTags().autoAction !== undefined) {
+                if(action.getTags().autoAction == "addObject") {
+                    action.setOnObjectAdded(object => {
+                        editor.addHelper(object);
                     });
-                } else {
-                    let material = action.getMaterialSelector().getMaterial();
-                    material.userData.overrides[action.getProperty()].autoAction = action;
-                    if (action.getTags().autoAction == "materialType") {
-                        material.userData.overrides["materialType"].overridden = true;
-                        material.userData.overrides["materialType"].autoAction.setSceneRoot(editor.scene);
-                    }
-                    editor.signals.sceneGraphChanged.dispatch();
                 }
-            });
-        }
-    });
+            }
+            action.execute();
+            if( action.getTags().autoAction == "object.position" ||
+                action.getTags().autoAction == "object.rotation" ||
+                action.getTags().autoAction == "object.scale" ) {
+                action.getObjectsSelector().getObjects().forEach((object) => {
+                    object.userData.overrides[action.getProperty()].autoAction = action;
+                    editor.signals.objectChanged.dispatch(object);
+                });
+            } else {
+                let material = action.getMaterialSelector().getMaterial();
+                material.userData.overrides[action.getProperty()].autoAction = action;
+                if (action.getTags().autoAction == "materialType") {
+                    material.userData.overrides["materialType"].overridden = true;
+                    material.userData.overrides["materialType"].autoAction.setSceneRoot(editor.scene);
+                }
+                editor.signals.sceneGraphChanged.dispatch();
+            }
+        });
+    }
 }
 
 function getBaseFolder() {
@@ -110,8 +117,4 @@ function getCurrentVariant() {
 
 function getCurrentModel() {
     return currentModel;
-}
-
-function LoadCurrentVariant() {
-    LoadModelVariant(currentModel, currentVariant);
 }

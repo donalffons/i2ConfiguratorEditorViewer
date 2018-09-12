@@ -1111,3 +1111,78 @@ UI.Modal.prototype.hide = function () {
 	return this;
 
 };
+
+
+// Loading Screen
+
+UI.LoadingScreen = function ( value ) {
+
+	var scope = this;
+
+	var dom = document.createElement( 'div' );
+
+	dom.style.position = 'absolute';
+	dom.style.width = '100%';
+	dom.style.height = '100%';
+	dom.style.backgroundColor = 'rgba(0,0,0,0.5)';
+	dom.style.display = 'none';
+	dom.style.alignItems = 'center';
+	dom.style.justifyContent = 'center';
+	dom.addEventListener( 'click', function ( event ) {
+
+		scope.hide();
+
+	} );
+
+	this.dom = dom;
+
+	this.container = new UI.Panel();
+	this.container.dom.style.width = '400px';
+	this.container.dom.style.padding = '20px';
+	this.container.dom.style.backgroundColor = '#ffffff';
+	this.container.dom.style.boxShadow = '0px 5px 10px rgba(0,0,0,0.5)';
+
+	let spinnerRow = new UI.Row().setClass("loadingSpinnerRow");
+	let spinner = new UI.Div().setClass("loadingSpinner");
+	spinnerRow.add(spinner);
+	this.container.add(spinnerRow);
+
+	let messageRow = new UI.Row().setWidth("100%").setStyle("textAlign", ["center"]);
+	this.container.add(messageRow);
+	this.textMessage = new UI.Text("Loading");
+	messageRow.add(this.textMessage);
+
+	let progressRow = new UI.Row().setWidth("100%").setStyle("textAlign", ["center"]);
+	this.container.add(progressRow);
+	this.textProgress = new UI.Text("");
+	progressRow.add(this.textProgress);
+
+	this.add( this.container );
+
+	return this;
+
+};
+
+UI.LoadingScreen.prototype = Object.create( UI.Element.prototype );
+UI.LoadingScreen.prototype.constructor = UI.LoadingScreen;
+
+UI.LoadingScreen.prototype.update = function ( step, totalSteps, stepName, size, progress ) {
+	this.textMessage.setValue("Step " + step + " of " + totalSteps + ": " + stepName);
+	this.textProgress.setValue("Progress: " + progress + "% of " + size + "KB loaded");
+}
+
+UI.LoadingScreen.prototype.show = function ( content ) {
+
+	this.dom.style.display = 'flex';
+
+	return this;
+
+};
+
+UI.LoadingScreen.prototype.hide = function () {
+
+	this.dom.style.display = 'none';
+
+	return this;
+
+};

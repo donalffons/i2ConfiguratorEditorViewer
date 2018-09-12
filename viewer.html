@@ -14,6 +14,7 @@
 	<body ontouchstart="">
 		<link href="css/main.css" rel="stylesheet" />
 		<link id="theme" href="css/light.css" rel="stylesheet" />
+		<link id="theme" href="css/my.css" rel="stylesheet" />
 
 		<script src="three.js/build/three.js"></script>
 		<script src="three.js/examples/js/libs/system.min.js"></script>
@@ -206,6 +207,9 @@
 			/*var sidebar = new Viewer.Sidebar( editor );
 			document.body.appendChild( sidebar.dom );*/
 
+			var loadingScreen = new UI.LoadingScreen();
+			document.body.appendChild( loadingScreen.dom );
+
 			var renderer;
 			function createRenderer( type, antialias, shadows, gammaIn, gammaOut ) {
 				if ( type === 'WebGLRenderer' && System.support.webgl === false ) {
@@ -247,8 +251,20 @@
 
 			//
 			$(document).ready(function() {
-				setCurrentModelAndVariant(function(){
-					LoadCurrentVariant();
+				setCurrentModelAndVariant(() => {
+					loadingScreen.show();
+					LoadModel(() => {
+						LoadVariant();
+						loadingScreen.hide();
+					}, (event) => {
+						let step = event.currStep;
+						let totalSteps = event.totalSteps;
+						let stepName = event.stepName;
+						var size = '(' + Math.floor( event.total / 1000 ).format() + ' KB)';
+						var progress = Math.floor( ( event.loaded / event.total ) * 100 ) + '%';
+
+						loadingScreen.update(step, totalSteps, stepName, size, progress);
+					});
 				});
 			});
 

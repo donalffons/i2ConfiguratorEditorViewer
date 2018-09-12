@@ -42,12 +42,13 @@ var Loader = function ( editor ) {
 
 	};
 
-	this.loadFile = function ( file, manager, path, promise ) {
+	this.loadFile = function ( file, manager, path, promise, cb_progress ) {
 
 		var filename = file.name;
 		var extension = filename.split( '.' ).pop().toLowerCase();
 
 		var reader = new FileReader();
+		reader.addEventListener( 'progress', cb_progress );
 		reader.addEventListener( 'progress', function ( event ) {
 
 			var size = '(' + Math.floor( event.total / 1000 ).format() + ' KB)';
