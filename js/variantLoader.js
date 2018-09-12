@@ -14,10 +14,10 @@ function Load3DFile(filename, cb_progress) {
     xhr.open("GET",  getModelFolder()+filename);
     xhr.responseType = "blob";
     xhr.filename = filename;
-    xhr.upload.addEventListener('progress', (event) => {
+    xhr.onprogress = (event) => {
         event.stepName = "Loading file: " + filename;
         cb_progress(event);
-    });
+    };
     xhr.onload = function(params) {
         params.currentTarget.response.name = params.currentTarget.filename;
         manager = new THREE.LoadingManager();
