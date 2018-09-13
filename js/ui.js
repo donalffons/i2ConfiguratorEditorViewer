@@ -1168,7 +1168,7 @@ UI.LoadingScreen.prototype.constructor = UI.LoadingScreen;
 
 UI.LoadingScreen.prototype.update = function ( currStep, totalSteps, stepName, size, progress ) {
 	this.textMessage.setValue("Step " + currStep + " of " + totalSteps + ": " + stepName);
-	this.textProgress.setValue("Progress: " + progress + "% of " + size + "KB loaded");
+	this.textProgress.setValue("Progress: " + progress + " of " + size + " loaded");
 }
 
 UI.LoadingScreen.prototype.show = function ( content ) {
