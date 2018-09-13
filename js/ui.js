@@ -1128,11 +1128,6 @@ UI.LoadingScreen = function ( value ) {
 	dom.style.display = 'none';
 	dom.style.alignItems = 'center';
 	dom.style.justifyContent = 'center';
-	dom.addEventListener( 'click', function ( event ) {
-
-		scope.hide();
-
-	} );
 
 	this.dom = dom;
 
