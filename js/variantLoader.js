@@ -83,11 +83,15 @@ async function LoadVariant() {
                     editor.signals.objectChanged.dispatch(object);
                 });
             } else {
-                let material = action.getMaterialSelector().getMaterial();
-                material.userData.overrides[action.getProperty()].autoAction = action;
-                if (action.getTags().autoAction == "materialType") {
-                    material.userData.overrides["materialType"].overridden = true;
-                    material.userData.overrides["materialType"].autoAction.setSceneRoot(editor.scene);
+                if( action.getType() == "i2ActionMaterialMapImage" ||
+                    action.getType() == "i2ActionMaterialProperty" ||
+                    action.getType() == "i2ActionMaterialType" ) {
+                    let material = action.getMaterialSelector().getMaterial();
+                    material.userData.overrides[action.getProperty()].autoAction = action;
+                    if (action.getTags().autoAction == "materialType") {
+                        material.userData.overrides["materialType"].overridden = true;
+                        material.userData.overrides["materialType"].autoAction.setSceneRoot(editor.scene);
+                    }
                 }
                 editor.signals.sceneGraphChanged.dispatch();
             }
