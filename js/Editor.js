@@ -103,7 +103,8 @@ Editor.prototype = {
 
 	setTheme: function ( value ) {
 
-		document.getElementById( 'theme' ).href = value;
+		// disable for now, since it is not working with the way how wordpress loads css files
+		// document.getElementById( 'theme' ).href = value;
 
 		this.signals.themeChanged.dispatch( value );
 
