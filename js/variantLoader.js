@@ -21,7 +21,7 @@ function Load3DFile(filename, cb_progress) {
     xhr.onload = function(params) {
         params.currentTarget.response.name = params.currentTarget.filename;
         manager = new THREE.LoadingManager();
-        editor.loader.loadFile( params.currentTarget.response, manager, basefolder+"/WebGL Models/"+getCurrentModel().getPath()+"/" , params.currentTarget.objectAddPromise, (event) => {
+        editor.loader.loadFile( params.currentTarget.response, manager, getModelFolder()+"/" , params.currentTarget.objectAddPromise, (event) => {
             event.stepName = "Parsing file: " + filename;
             cb_progress(event);
         });
@@ -106,16 +106,21 @@ function getBaseFolder() {
     return basefolder;
 }
 
+var i2ConfiguratorFolder = "";
+function seti2ConfiguratorFolder(folder) {
+    i2ConfiguratorFolder = folder;
+}
+
 function getModelFolder() {
     var basefolder = getBaseFolder();
-    return basefolder+"/WebGL Models/"+getCurrentModel().getPath()+"/";
+    return basefolder+i2ConfiguratorFolder+"/WebGL Models/"+getCurrentModel().getPath()+"/";
 }
 
 var currentVariant = {};
 var currentModel = {};
 async function setCurrentModelAndVariant(cb) {
-    var modelid = getParameterByName("modelid");
-    var variantid = getParameterByName("variantid");
+    var modelid = 51;//getParameterByName("modelid");
+    var variantid = 69;//getParameterByName("variantid");
     currentVariant = await i2VariantBuilder.getVariantByID(variantid);
     currentModel = await i2ModelBuilder.getModelByID(modelid);
     cb();
