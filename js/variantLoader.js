@@ -119,8 +119,8 @@ function getModelFolder() {
 var currentVariant = {};
 var currentModel = {};
 async function setCurrentModelAndVariant(cb) {
-    var modelid = 51;//getParameterByName("modelid");
-    var variantid = 69;//getParameterByName("variantid");
+    var modelid = getParameterByName("modelid");
+    var variantid = getParameterByName("variantid");
     currentVariant = await i2VariantBuilder.getVariantByID(variantid);
     currentModel = await i2ModelBuilder.getModelByID(modelid);
     cb();
